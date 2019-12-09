@@ -113,12 +113,13 @@ namespace TMPro
 
             return replace;
         }
-
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
 
             SetTextCustom(m_uneditedText);
         }
+#endif
     }
 }
