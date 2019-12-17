@@ -36,7 +36,7 @@ namespace TMPro
 
         public string UnditedText
         {
-            set { m_uneditedText = value; }
+            set { m_uneditedText = value; SetTextCustom(m_uneditedText); }
         }
 
         private void SetTextCustom(string value)
