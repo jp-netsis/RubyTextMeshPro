@@ -84,7 +84,7 @@ namespace TMPro
                 // Get hidden ruby width
                 var spaceTextWidth = hiddenSpaceW * rubyScale;
                 var compensationOffset = dir * spaceTextWidth;
-                float lineHeight = (m_currentFontAsset.faceInfo.lineHeight + (m_currentFontAsset.faceInfo.ascentLine - m_currentFontAsset.faceInfo.descentLine)) / m_currentFontAsset.faceInfo.lineHeight;
+                float lineHeight = 1.45f + rubyScale;
                 str = $"<line-height={lineHeight}em><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={compensationOffset}>" + str;
             }
 
