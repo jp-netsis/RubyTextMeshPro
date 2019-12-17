@@ -173,7 +173,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -324,8 +324,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -360}
-  m_SizeDelta: {x: 0, y: 220}
+  m_AnchoredPosition: {x: 0, y: -290}
+  m_SizeDelta: {x: -100, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &224377354
 MonoBehaviour:
@@ -472,7 +472,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -110}
-  m_SizeDelta: {x: 0, y: 220}
+  m_SizeDelta: {x: -100, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &747067815
 MonoBehaviour:
@@ -565,7 +565,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<line-height=1.945em><voffset=1em><size=50%>\_</size></voffset>\u86DE\u65E5\u672C\u8A9E\u306F\u96E3\u3057\u3044<nobr>\u65E5\u672C\u8A9E<nobr>\u306E<nobr>\u65E5\u672C\u8A9E<nobr>\u306B\u3088\u308B<nobr>\u65E5\u672C\u8A9E<nobr>\u306E\u305F\u3081\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025>\u3067\u3059\u30EB\u30D3\u30C6\u30B9\u30C8"
+  m_text: "<line-height=1.945em><voffset=1em><size=50%>\_</size></voffset>\u86DE\u65E5\u672C\u8A9E\u306F\u96E3\u3057\u3044<nobr>\u65E5\u672C\u8A9E<nobr>\u306E<nobr>\u65E5\u672C\u8A9E<nobr>\u306B\u3088\u308B<nobr>\u65E5\u672C\u8A9E<nobr>\u306E\u305F\u3081\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>
+    \ </size></nobr>\u3067\u3059\u30EB\u30D3\u30C6\u30B9\u30C8"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: db53a6634799ff6409d4511bb53b7773, type: 2}
   m_sharedMaterial: {fileID: 21381304732451086, guid: db53a6634799ff6409d4511bb53b7773,
@@ -614,7 +615,7 @@ MonoBehaviour:
   m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
-  m_isTextTruncated: 0
+  m_isTextTruncated: 1
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -635,12 +636,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 969314153}
-    characterCount: 40
+    characterCount: 36
     spriteCount: 0
-    spaceCount: 1
+    spaceCount: 3
     wordCount: 2
     linkCount: 0
-    lineCount: 3
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -707,8 +708,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -615}
-  m_SizeDelta: {x: 0, y: 220}
+  m_AnchoredPosition: {x: 0, y: -470}
+  m_SizeDelta: {x: -100, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &972491024
 MonoBehaviour:
@@ -1137,7 +1138,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<nobr><space=44.9975>\u86DE<space=-81.0075><voffset=1em><size=50%>\u304A\u305F\u307E\u3058\u3083\u304F\u3057</size></voffset></nobr><nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>\_\_</size></nobr>\u306F<nobr><space=8.997501>\u96E3<space=-45.0075><voffset=1em><size=50%>\u3080\u305A\u304B</size></voffset></nobr>\u3057\u3044<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>\_\_</size></nobr>\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>\_\_</size></nobr>\u306B\u3088\u308B<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>\_\_</size></nobr>\u306E\u305F\u3081\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><size=92.60547%>\_\_</size></nobr>\u3067\u3059\u30EB\u30D3\u30C6\u30B9\u30C8\r\n"
+  m_text: "<nobr>\u86DE<space=-81.0075><voffset=1em><size=50%>\u304A\u305F\u307E\u3058\u3083\u304F\u3057</size></voffset><space=-44.9975></nobr><nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025></nobr>\u306F<nobr>\u96E3<space=-45.0075><voffset=1em><size=50%>\u3080\u305A\u304B</size></voffset><space=-8.997501></nobr>\u3057\u3044<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025></nobr>\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025></nobr>\u306B\u3088\u308B<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025></nobr>\u306E\u305F\u3081\u306E<nobr>\u65E5\u672C\u8A9E<space=-90.0075><voffset=1em><size=50%>\u306B\u307B\u3093\u3054</size></voffset><space=18.0025></nobr>\u3067\u3059\u30EB\u30D3\u30C6\u30B9\u30C8\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: db53a6634799ff6409d4511bb53b7773, type: 2}
   m_sharedMaterial: {fileID: 21381304732451086, guid: db53a6634799ff6409d4511bb53b7773,
@@ -1207,10 +1208,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1360261907}
-    characterCount: 77
+    characterCount: 67
     spriteCount: 0
-    spaceCount: 11
-    wordCount: 6
+    spaceCount: 1
+    wordCount: 1
     linkCount: 0
     lineCount: 2
     pageCount: 1
@@ -1348,7 +1349,7 @@ MonoBehaviour:
   m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
-  m_isTextTruncated: 0
+  m_isTextTruncated: 1
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
@@ -1369,12 +1370,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1569484599}
-    characterCount: 36
+    characterCount: 30
     spriteCount: 0
     spaceCount: 1
     wordCount: 2
     linkCount: 0
-    lineCount: 3
+    lineCount: 2
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -1441,8 +1442,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -875}
-  m_SizeDelta: {x: 0, y: 220}
+  m_AnchoredPosition: {x: 0, y: -650}
+  m_SizeDelta: {x: -100, y: 165}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2042009870
 MonoBehaviour:

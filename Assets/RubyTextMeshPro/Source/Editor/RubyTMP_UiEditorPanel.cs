@@ -8,13 +8,12 @@ namespace TMPro.EditorUtilities
     public class RubyTMP_UiEditorPanel : TMP_UiEditorPanel
     {
         //Labels and Tooltips
-        static readonly GUIContent k_RtlToggleLabel = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
+        private static readonly GUIContent k_RtlToggleLabel = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
 
         private SerializedProperty rubyVerticalOffset;
         private SerializedProperty rubyScale;
         private SerializedProperty rubyShowType;
         private SerializedProperty allVCompensationRuby;
-        private SerializedProperty allVCompensationRubyLineHeight;
         private SerializedProperty m_UneditedText;
         private string m_UneditedRtlText;
 
@@ -26,7 +25,6 @@ namespace TMPro.EditorUtilities
             rubyVerticalOffset = serializedObject.FindProperty("rubyVerticalOffset");
             rubyShowType = serializedObject.FindProperty("rubyShowType");
             allVCompensationRuby = serializedObject.FindProperty("allVCompensationRuby");
-            allVCompensationRubyLineHeight = serializedObject.FindProperty("allVCompensationRubyLineHeight");
             m_UneditedText = serializedObject.FindProperty("m_uneditedText");
         }
 
@@ -146,12 +144,10 @@ namespace TMPro.EditorUtilities
                 EditorGUILayout.PropertyField(rubyShowType);
                 EditorGUILayout.PropertyField(rubyVerticalOffset);
                 EditorGUILayout.PropertyField(allVCompensationRuby);
-                EditorGUILayout.PropertyField(allVCompensationRubyLineHeight);
             }
             --EditorGUI.indentLevel;
 
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }
