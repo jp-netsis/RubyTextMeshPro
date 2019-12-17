@@ -27,6 +27,8 @@ namespace TMPro
 
         [Tooltip("all v compensation ruby.")]
         [SerializeField] private bool allVCompensationRuby = false;
+        [Tooltip("all ruby v compensation. (em, px, %).")]
+        [SerializeField] private string allVCompensationRubyLineHeight = "1.945em";
 
         [SerializeField]
         [TextArea(5, 10)]
@@ -87,8 +89,8 @@ namespace TMPro
                 // Get hidden ruby width
                 var spaceTextWidth = hiddenSpaceW * rubyScale;
                 var compensationOffset = dir * spaceTextWidth;
-                float lineHeight = 1.45f + rubyScale;
-                str = $"<line-height={lineHeight}em><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={compensationOffset}>" + str;
+
+                str = $"<line-height={allVCompensationRubyLineHeight}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={compensationOffset}>" + str;
             }
 
             return str;
