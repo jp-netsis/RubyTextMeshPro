@@ -1,3 +1,5 @@
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/ruby.png)
+
 # Ruby(Furigana) Text Mesh Pro
 
 TextMeshProに振り仮名(ふりがな、フリガナ、ルビ)タグを追加します。
