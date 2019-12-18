@@ -20,9 +20,13 @@ TextMeshProVer:2.0.1
 
 # Features
 ### Realtime Ruby Text
-あなたは`<ruby=にほんご>日本語</ruby>`タグを使用できます。
+あなたは`<ruby=にほんご>日本語</ruby>`タグもしくは省略した`<r=にほんご>日本語</r>`タグを使用できます。
+また、半角ダブルクォーテーションで囲っても動作します。
+`<ruby="にほんご">日本語</ruby>`タグも`<r="にほんご">日本語</r>`タグもOKです。
 
-You can use `<ruby=にほんご>日本語</ruby>` tag. 
+You can use `<ruby=ice>fire</ruby>` tag or `<r=ice>fire</r>` tag.  Both are the same.
+It can also work with double quotes.
+`<ruby="ice">fire</ruby>` tag or `<r="ice">fire</r>` tag.
 
 # How To Use
 * (1). あなたには`TextMeshPro`プラグインが必要です。`Package Manager`からインストールしてください。Asset StoreからのText Mesh Proのインストールはしないでください。
