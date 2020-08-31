@@ -66,6 +66,11 @@ namespace TMPro.EditorUtilities
         {
             EditorGUILayout.Space();
 
+            Rect rect = EditorGUILayout.GetControlRect(false, 22);
+            GUI.Label(rect, new GUIContent("<b>Ruby Text Input</b>"), TMP_UIStyleManager.sectionHeader);
+
+            EditorGUI.indentLevel = 0;
+
             // If the text component is linked, disable the text input box.
             if (m_ParentLinkedTextComponentProp.objectReferenceValue != null)
             {
@@ -73,48 +78,50 @@ namespace TMPro.EditorUtilities
             }
             else
             {
+                // Display RTL Toggle
+                float labelWidth = EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = 110f;
+
+                m_IsRightToLeftProp.boolValue = EditorGUI.Toggle(new Rect(rect.width - 120, rect.y + 3, 130, 20), k_RtlToggleLabel, m_IsRightToLeftProp.boolValue);
+
+                EditorGUIUtility.labelWidth = labelWidth;
+
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.PropertyField(m_UneditedText);
 
-                if (EditorGUI.EndChangeCheck() || (m_IsRightToLeftProp.boolValue && string.IsNullOrEmpty(m_UneditedRtlText)))
+                if (EditorGUI.EndChangeCheck())
                 {
                     m_HavePropertiesChanged = true;
-
-                    // Handle Left to Right or Right to Left Editor
-                    if (m_IsRightToLeftProp.boolValue)
-                    {
-                        m_UneditedRtlText = string.Empty;
-                        string sourceText = m_UneditedText.stringValue;
-
-                        // Reverse Text displayed in Text Input Box
-                        for (int i = 0; i < sourceText.Length; i++)
-                        {
-                            m_UneditedRtlText += sourceText[sourceText.Length - i - 1];
-                        }
-                    }
                 }
-
-                // Toggle showing Rich Tags
-                m_IsRightToLeftProp.boolValue = EditorGUILayout.Toggle(k_RtlToggleLabel, m_IsRightToLeftProp.boolValue);
 
                 if (m_IsRightToLeftProp.boolValue)
                 {
+                    // Copy source text to RTL string
+                    m_RtlText = string.Empty;
+                    string sourceText = m_UneditedText.stringValue;
+
+                    // Reverse Text displayed in Text Input Box
+                    for (int i = 0; i < sourceText.Length; i++)
+                        m_RtlText += sourceText[sourceText.Length - i - 1];
+
+                    GUILayout.Label("RTL Text Input");
+
                     EditorGUI.BeginChangeCheck();
-                    m_UneditedRtlText = EditorGUILayout.TextArea(m_UneditedRtlText, TMP_UIStyleManager.wrappingTextArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_UneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandWidth(true));
+                    m_RtlText = EditorGUILayout.TextArea(m_RtlText, TMP_UIStyleManager.wrappingTextArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_TextProp) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandWidth(true));
+
                     if (EditorGUI.EndChangeCheck())
                     {
                         // Convert RTL input
-                        string sourceText = string.Empty;
+                        sourceText = string.Empty;
 
                         // Reverse Text displayed in Text Input Box
-                        for (int i = 0; i < m_UneditedRtlText.Length; i++)
-                        {
-                            sourceText += m_UneditedRtlText[m_UneditedRtlText.Length - i - 1];
-                        }
+                        for (int i = 0; i < m_RtlText.Length; i++)
+                            sourceText += m_RtlText[m_RtlText.Length - i - 1];
 
                         m_UneditedText.stringValue = sourceText;
                     }
                 }
+
                 // show TextMeshPro text
                 EditorGUILayout.LabelField("Convert Text");
                 EditorGUILayout.SelectableLabel(m_TextProp.stringValue, EditorStyles.textArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_UneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandHeight(true));

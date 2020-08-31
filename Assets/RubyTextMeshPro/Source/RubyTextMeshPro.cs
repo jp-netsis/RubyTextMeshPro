@@ -63,6 +63,7 @@ namespace TMPro
             var hiddenSpaceW = GetPreferredValues("\u00A0").x * (m_isOrthographic ? 1 : 10f);
             // Replace <ruby> tags text layout.
             var matches = RubyRegex.Matches(str);
+            var compensationOffset = 0f;
             foreach (Match match in matches)
             {
                 if (match.Groups.Count != 5) continue;
@@ -76,8 +77,8 @@ namespace TMPro
                 var baseTextH = GetPreferredValues(baseText).y * (m_isOrthographic ? 1 : 10f);
                 var dir = isRightToLeftText ? 1 : -1;
                 var rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
-                var compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
-                var replace = CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, hiddenSpaceW);
+                compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
+                var replace = CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, isRightToLeftText);
                 str = str.Replace(fullMatch, replace);
             }
             if (allVCompensationRuby)
@@ -85,18 +86,13 @@ namespace TMPro
                 // warning! bad Know-how
                 // line-height tag is down the next line start.
                 // now line can't change, corresponding by putting a hidden ruby
-                var dir = isRightToLeftText ? 1 : -1;
-                // Get hidden ruby width
-                var spaceTextWidth = hiddenSpaceW * rubyScale;
-                var compensationOffset = dir * spaceTextWidth;
-
                 str = $"<line-height={allVCompensationRubyLineHeight}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={compensationOffset}>" + str;
             }
 
             return str;
         }
 
-        private string CreateReplaceValue(string baseText, string rubyText, float rubyTextOffset, float compensationOffset, float hiddenSpaceW)
+        private string CreateReplaceValue(string baseText, string rubyText, float rubyTextOffset, float compensationOffset, bool isRightToLeftText)
         {
             var replace = string.Empty;
             switch (rubyShowType)
@@ -106,16 +102,27 @@ namespace TMPro
                     break;
 
                 case RubyShowType.RUBY_ALIGNMENT:
-                    if (compensationOffset < 0)
+                    if (isRightToLeftText)
                     {
-                        replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
+                        if (compensationOffset < 0)
+                        {
+                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                        }
+                        else
+                        {
+                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
+                        }
                     }
                     else
                     {
-                        var n = Mathf.CeilToInt(compensationOffset / hiddenSpaceW);
-                        var hiddenSpaceSize = compensationOffset / hiddenSpaceW / n;
-                        string hiddenSpaces = new string(' ', n);
-                        replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><size={hiddenSpaceSize * 100f}%>{hiddenSpaces}</size></nobr>";
+                        if (compensationOffset < 0)
+                        {
+                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
+                        }
+                        else
+                        {
+                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                        }
                     }
                     break;
             }
