@@ -5,7 +5,7 @@ using TMPro;
 namespace TMPro.EditorUtilities
 {
     [CustomEditor(typeof(RubyTextMeshProUGUI), true), CanEditMultipleObjects]
-    public class RubyTMP_UiEditorPanel : TMP_EditorPanelUI
+    public class RubyTMP_EditorPanelUI : TMP_EditorPanelUI
     {
         //Labels and Tooltips
         private static readonly GUIContent k_RtlToggleLabel = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
