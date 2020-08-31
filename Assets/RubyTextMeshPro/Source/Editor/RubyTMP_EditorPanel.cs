@@ -67,7 +67,7 @@ namespace TMPro.EditorUtilities
             EditorGUILayout.Space();
 
             // If the text component is linked, disable the text input box.
-            if (m_IsLinkedTextComponentProp.boolValue)
+            if (m_ParentLinkedTextComponentProp.objectReferenceValue != null)
             {
                 EditorGUILayout.HelpBox("The Text Input Box is disabled due to this text component being linked to another.", MessageType.Info);
             }

@@ -44,7 +44,7 @@ namespace TMPro
             text = ReplaceRubyTags(value);
 
             // SetLayoutDirty called
-            if (m_layoutAlreadyDirty)
+            if (m_isLayoutDirty)
             {
                 // changes to the text object properties need to be applied immediately.
                 ForceMeshUpdate();

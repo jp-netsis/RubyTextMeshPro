@@ -5,7 +5,7 @@ using TMPro;
 namespace TMPro.EditorUtilities
 {
     [CustomEditor(typeof(RubyTextMeshProUGUI), true), CanEditMultipleObjects]
-    public class RubyTMP_UiEditorPanel : TMP_UiEditorPanel
+    public class RubyTMP_UiEditorPanel : TMP_EditorPanelUI
     {
         //Labels and Tooltips
         private static readonly GUIContent k_RtlToggleLabel = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
@@ -67,7 +67,7 @@ namespace TMPro.EditorUtilities
             EditorGUILayout.Space();
 
             // If the text component is linked, disable the text input box.
-            if (m_IsLinkedTextComponentProp.boolValue)
+            if (m_ParentLinkedTextComponentProp.objectReferenceValue != null)
             {
                 EditorGUILayout.HelpBox("The Text Input Box is disabled due to this text component being linked to another.", MessageType.Info);
             }
