@@ -72,6 +72,12 @@ namespace TMPro
 
                 var rubyTextW = GetPreferredValues(rubyText).x * (m_isOrthographic ? 1 : 10f) * rubyScale;
                 var baseTextW = GetPreferredValues(baseText).x * (m_isOrthographic ? 1 : 10f);
+                if (this.m_enableAutoSizing)
+                {
+                    var calc = (this.m_fontSize / this.m_maxFontSize);
+                    rubyTextW *= calc;
+                    baseTextW *= calc;
+                }
                 var dir = isRightToLeftText ? 1 : -1;
                 var rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
                 compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
@@ -135,7 +141,9 @@ namespace TMPro
         protected override void OnValidate()
         {
             base.OnValidate();
-
+            
+            ForceMeshUpdate();
+            
             SetTextCustom(m_uneditedText);
         }
 
