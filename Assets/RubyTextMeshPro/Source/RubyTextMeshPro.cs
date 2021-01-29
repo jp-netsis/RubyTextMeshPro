@@ -59,8 +59,18 @@ namespace TMPro
         private string ReplaceRubyTags(string str)
         {
             if (string.IsNullOrEmpty(str)) return str;
-            var pVal = GetPreferredValues("\u00A0");
-            var hiddenSpaceW = GetPreferredValues("\u00A0").x * (m_isOrthographic ? 1 : 10f);
+            // warning! bad Know-how
+            // Can not get GetPreferredValues("\u00A0").x at width,
+            // add string and calculate.
+            // and Use GetPreferredValues, change this.m_maxFontSize value.
+            var nonBreakSpaceW = GetPreferredValues("\u00A0a").x - GetPreferredValues("a").x;
+            var fontSizeScale = 1f;
+            if (this.m_enableAutoSizing)
+            {
+                fontSizeScale = (this.m_fontSize / this.m_maxFontSize);
+            }
+            var dir = isRightToLeftText ? 1 : -1;
+            var hiddenSpaceW = dir * nonBreakSpaceW * (m_isOrthographic ? 1 : 10f) * rubyScale * fontSizeScale;
             // Replace <ruby> tags text layout.
             var matches = RubyRegex.Matches(str);
             var compensationOffset = 0f;
@@ -75,11 +85,9 @@ namespace TMPro
                 var baseTextW = GetPreferredValues(baseText).x * (m_isOrthographic ? 1 : 10f);
                 if (this.m_enableAutoSizing)
                 {
-                    var calc = (this.m_fontSize / this.m_maxFontSize);
-                    rubyTextW *= calc;
-                    baseTextW *= calc;
+                    rubyTextW *= fontSizeScale;
+                    baseTextW *= fontSizeScale;
                 }
-                var dir = isRightToLeftText ? 1 : -1;
                 var rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
                 compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
                 var replace = CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, isRightToLeftText);
@@ -90,7 +98,7 @@ namespace TMPro
                 // warning! bad Know-how
                 // line-height tag is down the next line start.
                 // now line can't change, corresponding by putting a hidden ruby
-                str = $"<line-height={allVCompensationRubyLineHeight}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={compensationOffset}>" + str;
+                str = $"<line-height={allVCompensationRubyLineHeight}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>" + str;
             }
 
             return str;
@@ -208,7 +216,6 @@ namespace TMPro
 
             SetTextCustom(m_uneditedText);
         }
-
 #endif
     }
 }
