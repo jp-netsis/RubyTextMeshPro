@@ -1,4 +1,4 @@
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/ruby.png)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/ruby.png)
 
 # Ruby(Furigana) Text Mesh Pro
 
@@ -35,7 +35,7 @@ It can also work with double quotes.
 * (2). RubyTextMeshProディレクトリをコピーすれば使用可能です
 * (2). You can use it by copying the RubyTextMeshPro directory
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/add_ruby.gif)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/add_ruby.gif)
 
 ## Usage Description
 
@@ -47,13 +47,13 @@ RUBY_ALIGNMENT ルビに合わせて文字を表示します
 
 BASE_ALIGNMENT 元の文字に合わせて文字を表示します
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/align_width.gif)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/align_width.gif)
 
 ### AllVCompensation
 
 ルビを使用しない場合に同じ隙間を持たせる機能です
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/vcompensation.gif)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/vcompensation.gif)
 
 # Known Issues
 * (1).TextMeshPro のソースは改変していません。アラインでいくつか問題が起こります。
@@ -65,17 +65,17 @@ BASE_ALIGNMENT 元の文字に合わせて文字を表示します
 * (1)_1.'BASE_ALIGN'で左寄せの場合かつルビが行頭にありつつ元の文字より多い場合、枠の外まで表示されます
 * (1)_1.'BASE_ALIGN' setting is left align and the ruby is at the beginning of the line but more than the original character, it will be displayed outside the frame.
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/issue_lefttop.png)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/issue_lefttop.png)
 
 * (1)_2.'BASE_ALIGN'で中央寄せの場合かつルビが元の文字より多い場合、中央に表示されません。 'RUBY_ALIGN' を使用すると解消される場合があります。
 * (1)_2.'BASE_ALIGN' setting is center align and the ruby is at more than the original character, can't displayed center. 'RUBY_ALIGN' used, it may be solved.
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/issue_base_alignment_center.png)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/issue_base_alignment_center.png)
 
 * (1)_3.'BASE_ALIGN'で右寄せの場合かつルビが行頭にありつつ元の文字より多い場合、(1)_1と違い、枠の内まで表示されます
 * (1)_3.'BASE_ALIGN' setting is left align and the ruby is at the beginning of the line but more than the original character, Different from (1)_1 it will be displayed in the frame.
 
-![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/master/Screenshots/issue_base_alignment_bottomright.png)
+![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/issue_base_alignment_bottomright.png)
 
 # Use Font File
 
