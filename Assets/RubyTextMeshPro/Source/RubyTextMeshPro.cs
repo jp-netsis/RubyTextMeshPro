@@ -34,11 +34,26 @@ namespace TMPro
         [TextArea(5, 10)]
         private string m_uneditedText;
 
+        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
+
         public string UnditedText
         {
-            set { m_uneditedText = value; SetTextCustom(m_uneditedText); }
+            set
+            {
+                m_uneditedText = value; 
+                SetTextCustom(m_uneditedText);
+                if (enableAutoSizing)
+                {
+                    StartCoroutine(WaitFrameUpdate(m_uneditedText));
+                }
+            }
         }
 
+        IEnumerator WaitFrameUpdate(string str)
+        {
+            yield return waitForEndOfFrame;
+            SetTextCustom(m_uneditedText);
+        }
         private void SetTextCustom(string value)
         {
             text = ReplaceRubyTags(value);
@@ -207,6 +222,11 @@ namespace TMPro
         }
 
 #if UNITY_EDITOR
+        IEnumerator WaitFrameUpdateEditor(string str)
+        {
+            yield return null;
+            SetTextCustom(m_uneditedText);
+        }
 
         protected override void OnValidate()
         {
@@ -215,6 +235,10 @@ namespace TMPro
             ForceMeshUpdate();
 
             SetTextCustom(m_uneditedText);
+            if (enableAutoSizing)
+            {
+                StartCoroutine(WaitFrameUpdateEditor(m_uneditedText));
+            }
         }
 #endif
     }
