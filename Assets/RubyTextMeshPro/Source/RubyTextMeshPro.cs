@@ -33,39 +33,38 @@ namespace TMPro
         [SerializeField]
         [TextArea(5, 10)]
         private string m_uneditedText;
-
-        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
-
+        
         public string UnditedText
         {
             set
             {
                 m_uneditedText = value; 
                 SetTextCustom(m_uneditedText);
-                if (enableAutoSizing)
-                {
-                    StartCoroutine(WaitFrameUpdate(m_uneditedText));
-                }
             }
         }
 
-        IEnumerator WaitFrameUpdate(string str)
-        {
-            yield return waitForEndOfFrame;
-            SetTextCustom(m_uneditedText);
-        }
         private void SetTextCustom(string value)
         {
             text = ReplaceRubyTags(value);
 
-            // SetLayoutDirty called
-            if (m_isLayoutDirty)
+            // m_havePropertiesChanged : text changed => true, ForceMeshUpdate in OnPreRenderCanvas => false
+            if (m_havePropertiesChanged)
             {
                 // changes to the text object properties need to be applied immediately.
                 ForceMeshUpdate();
             }
         }
 
+        public override void ForceMeshUpdate(bool ignoreActiveState = false, bool forceTextReparsing = false)
+        {
+            base.ForceMeshUpdate(ignoreActiveState,forceTextReparsing);
+            if (m_enableAutoSizing)
+            {
+                // change auto size timing, update ruby tag size.
+                SetTextCustom(m_uneditedText);
+            }
+        }
+        
         /// <summary>
         /// replace ruby tags.
         /// </summary>
@@ -85,6 +84,7 @@ namespace TMPro
                 fontSizeScale = (this.m_fontSize / this.m_maxFontSize);
             }
             var dir = isRightToLeftText ? 1 : -1;
+            // Q. Why (m_isOrthographic ? 1 : 10f) => A. TMP_Text.cs L7622, L7625 
             var hiddenSpaceW = dir * nonBreakSpaceW * (m_isOrthographic ? 1 : 10f) * rubyScale * fontSizeScale;
             // Replace <ruby> tags text layout.
             var matches = RubyRegex.Matches(str);
@@ -222,23 +222,12 @@ namespace TMPro
         }
 
 #if UNITY_EDITOR
-        IEnumerator WaitFrameUpdateEditor(string str)
-        {
-            yield return null;
-            SetTextCustom(m_uneditedText);
-        }
 
         protected override void OnValidate()
         {
             base.OnValidate();
             
-            ForceMeshUpdate();
-
             SetTextCustom(m_uneditedText);
-            if (enableAutoSizing)
-            {
-                StartCoroutine(WaitFrameUpdateEditor(m_uneditedText));
-            }
         }
 #endif
     }
