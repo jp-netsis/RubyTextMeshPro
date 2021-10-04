@@ -14,9 +14,9 @@ You need to have `TextMeshPro` plugin in your project. You can install TMPro via
 
 I checked Unity and TextMeshPro Version are below.
 
-UnityVer:2019.4.9f1 
+UnityVer:2020.3.17f1 
 
-TextMeshProVer:2.1.1
+TextMeshProVer:3.0.6
 
 # Features
 ### Realtime Ruby Text
