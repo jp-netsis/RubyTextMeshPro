@@ -59,7 +59,8 @@ namespace TMPro
             if (m_enableAutoSizing)
             {
                 // change auto size timing, update ruby tag size.
-                SetTextCustom(m_uneditedText);
+                text = ReplaceRubyTags(m_uneditedText);
+                base.ForceMeshUpdate(ignoreActiveState,forceTextReparsing);
             }
         }
 
