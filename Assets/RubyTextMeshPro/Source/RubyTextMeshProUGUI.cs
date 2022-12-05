@@ -14,7 +14,7 @@ namespace TMPro
         }
 
         // ruby tag
-        private static readonly Regex RubyRegex = new Regex(@"<r(uby)?=(?<ruby>[\s\S]*?)>(?<val>[\s\S]*?)<\/r(uby)?>");
+        private static readonly Regex RubyRegex = new Regex(@"<r(uby)?=""?(?<ruby>[\s\S]*?)""?>(?<val>[\s\S]*?)<\/r(uby)?>");
 
         [Tooltip("v offset ruby. (em, px, %).")]
         [SerializeField] private string rubyVerticalOffset = "1em";
