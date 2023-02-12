@@ -1,32 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="UserContentModel">
-    <attachedFolders>
-      <Path>$USER_HOME$/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ide.rider@1.1.4</Path>
-      <Path>$USER_HOME$/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ide.vscode@1.2.1</Path>
-      <Path>$USER_HOME$/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.test-framework@1.1.16</Path>
-      <Path>$USER_HOME$/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.textmeshpro@2.1.1</Path>
-      <Path>$USER_HOME$/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.timeline@1.2.6</Path>
-    </attachedFolders>
-    <explicitIncludes>
-      <Path>Library/PackageCache/com.unity.collab-proxy@1.2.16</Path>
-      <Path>Library/PackageCache/com.unity.ext.nunit@1.0.0</Path>
-      <Path>Library/PackageCache/com.unity.ide.rider@1.1.4</Path>
-      <Path>Library/PackageCache/com.unity.ide.vscode@1.2.1</Path>
-      <Path>Library/PackageCache/com.unity.test-framework@1.1.16</Path>
-      <Path>Library/PackageCache/com.unity.timeline@1.2.6</Path>
-      <Path>Packages</Path>
-      <Path>ProjectSettings</Path>
-    </explicitIncludes>
-    <explicitExcludes>
-      <Path>.git</Path>
-      <Path>.idea</Path>
-      <Path>.vs</Path>
-      <Path>Library</Path>
-      <Path>Logs</Path>
-      <Path>Screenshots</Path>
-      <Path>UnityPackage</Path>
-      <Path>obj</Path>
-    </explicitExcludes>
+    <attachedFolders />
+    <explicitIncludes />
+    <explicitExcludes />
   </component>
 </project>

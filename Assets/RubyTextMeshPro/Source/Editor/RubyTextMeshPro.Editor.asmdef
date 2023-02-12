@@ -1,0 +1,20 @@
+{
+  "name": "RubyTextMeshPro.Editor",
+  "rootNamespace": "",
+  "references": [
+    "Unity.TextMeshPro.Editor",
+    "Unity.TextMeshPro",
+    "RubyTextMeshPro"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

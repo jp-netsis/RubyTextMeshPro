@@ -1,23 +1,32 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEditor.SceneManagement;
-using UnityEditor.Experimental.SceneManagement;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-
 
 namespace TMPro.EditorUtilities
 {
     public static class RubyTMPro_CreateObjectMenu
     {
+        private const string UI_LAYER_NAME = "UI";
+
+        private const string STANDARD_SPRITE_PATH = "UI/Skin/UISprite.psd";
+        private const string BACKGROUND_SPRITE_PATH = "UI/Skin/Background.psd";
+        private const string INPUT_FIELD_BACKGROUND_PATH = "UI/Skin/InputFieldBackground.psd";
+        private const string KNOB_PATH_PATH = "UI/Skin/Knob.psd";
+        private const string CHECKMARK_PATH = "UI/Skin/Checkmark.psd";
+        private const string DROPDOWN_ARROW_PATH = "UI/Skin/DropdownArrow.psd";
+        private const string MASK_PATH = "UI/Skin/UIMask.psd";
+
+        private static RubyTMP_DefaultControls.Resources standardResources;
 
         /// <summary>
         /// Create a TextMeshPro object that works with the Mesh Renderer
         /// </summary>
         /// <param name="command"></param>
         [MenuItem("GameObject/3D Object/Text - RubyTextMeshPro", false, 30)]
-        static void CreateTextMeshProObjectPerform(MenuCommand command)
+        private static void CreateTextMeshProObjectPerform(MenuCommand command)
         {
             GameObject go = new GameObject("Text (RubyTMP)");
 
@@ -25,12 +34,13 @@ namespace TMPro.EditorUtilities
             StageUtility.PlaceGameObjectInCurrentStage(go);
 
             RubyTextMeshPro textMeshPro = go.AddComponent<RubyTextMeshPro>();
-            textMeshPro.text = textMeshPro.UnditedText = "Sample text";
+            textMeshPro.text = textMeshPro.uneditedText = "Sample text";
             textMeshPro.alignment = TextAlignmentOptions.TopLeft;
 
-            Undo.RegisterCreatedObjectUndo((Object)go, "Create " + go.name);
+            Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
 
             GameObject contextObject = command.context as GameObject;
+
             if (contextObject != null)
             {
                 GameObjectUtility.SetParentAndAlign(go, contextObject);
@@ -40,83 +50,73 @@ namespace TMPro.EditorUtilities
             Selection.activeGameObject = go;
         }
 
-
         /// <summary>
         /// Create a TextMeshPro object that works with the CanvasRenderer
         /// </summary>
-        /// <param name="command"></param>
+        /// <param name="menuCommand"></param>
         [MenuItem("GameObject/UI/Text - RubyTextMeshPro", false, 2001)]
-        static void CreateTextMeshProGuiObjectPerform(MenuCommand menuCommand)
+        private static void CreateTextMeshProGuiObjectPerform(MenuCommand menuCommand)
         {
-            GameObject go = RubyTMP_DefaultControls.CreateText(GetStandardResources());
+            GameObject go = RubyTMP_DefaultControls.CreateText(RubyTMPro_CreateObjectMenu.GetStandardResources());
 
             // Override text color and font size
             TMP_Text textComponent = go.GetComponent<TMP_Text>();
             textComponent.color = Color.white;
 //            if (textComponent.m_isWaitingOnResourceLoad == false)
-                textComponent.fontSize = TMP_Settings.defaultFontSize;
+            textComponent.fontSize = TMP_Settings.defaultFontSize;
 
-            PlaceUIElementRoot(go, menuCommand);
+            RubyTMPro_CreateObjectMenu.PlaceUIElementRoot(go, menuCommand);
         }
 
         [MenuItem("GameObject/UI/Button - RubyTextMeshPro", false, 2031)]
-        static public void AddButton(MenuCommand menuCommand)
+        public static void AddButton(MenuCommand menuCommand)
         {
-            GameObject go = RubyTMP_DefaultControls.CreateButton(GetStandardResources());
+            GameObject go = RubyTMP_DefaultControls.CreateButton(RubyTMPro_CreateObjectMenu.GetStandardResources());
 
             // Override font size
             TMP_Text textComponent = go.GetComponentInChildren<TMP_Text>();
             textComponent.fontSize = 24;
 
-            PlaceUIElementRoot(go, menuCommand);
+            RubyTMPro_CreateObjectMenu.PlaceUIElementRoot(go, menuCommand);
         }
 
-        private const string kUILayerName = "UI";
-
-        private const string kStandardSpritePath = "UI/Skin/UISprite.psd";
-        private const string kBackgroundSpritePath = "UI/Skin/Background.psd";
-        private const string kInputFieldBackgroundPath = "UI/Skin/InputFieldBackground.psd";
-        private const string kKnobPath = "UI/Skin/Knob.psd";
-        private const string kCheckmarkPath = "UI/Skin/Checkmark.psd";
-        private const string kDropdownArrowPath = "UI/Skin/DropdownArrow.psd";
-        private const string kMaskPath = "UI/Skin/UIMask.psd";
-
-        static private RubyTMP_DefaultControls.Resources s_StandardResources;
-
-
-        static private RubyTMP_DefaultControls.Resources GetStandardResources()
+        private static RubyTMP_DefaultControls.Resources GetStandardResources()
         {
-            if (s_StandardResources.standard == null)
+            if (RubyTMPro_CreateObjectMenu.standardResources.standard == null)
             {
-                s_StandardResources.standard = AssetDatabase.GetBuiltinExtraResource<Sprite>(kStandardSpritePath);
-                s_StandardResources.background = AssetDatabase.GetBuiltinExtraResource<Sprite>(kBackgroundSpritePath);
-                s_StandardResources.inputField = AssetDatabase.GetBuiltinExtraResource<Sprite>(kInputFieldBackgroundPath);
-                s_StandardResources.knob = AssetDatabase.GetBuiltinExtraResource<Sprite>(kKnobPath);
-                s_StandardResources.checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>(kCheckmarkPath);
-                s_StandardResources.dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>(kDropdownArrowPath);
-                s_StandardResources.mask = AssetDatabase.GetBuiltinExtraResource<Sprite>(kMaskPath);
+                RubyTMPro_CreateObjectMenu.standardResources.standard = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.STANDARD_SPRITE_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.background = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.BACKGROUND_SPRITE_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.inputField = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.INPUT_FIELD_BACKGROUND_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.knob = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.KNOB_PATH_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.CHECKMARK_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.DROPDOWN_ARROW_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.mask = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.MASK_PATH);
             }
-            return s_StandardResources;
+
+            return RubyTMPro_CreateObjectMenu.standardResources;
         }
 
-
-        private static void SetPositionVisibleinSceneView(RectTransform canvasRTransform, RectTransform itemTransform)
+        private static void SetPositionVisibleInSceneView(RectTransform canvasRTransform, RectTransform itemTransform)
         {
             // Find the best scene view
             SceneView sceneView = SceneView.lastActiveSceneView;
+
             if (sceneView == null && SceneView.sceneViews.Count > 0)
+            {
                 sceneView = SceneView.sceneViews[0] as SceneView;
+            }
 
             // Couldn't find a SceneView. Don't set position.
             if (sceneView == null || sceneView.camera == null)
+            {
                 return;
+            }
 
             // Create world space Plane from canvas position.
             Camera camera = sceneView.camera;
             Vector3 position = Vector3.zero;
-            Vector2 localPlanePosition;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRTransform, new Vector2(camera.pixelWidth / 2, camera.pixelHeight / 2), camera, out localPlanePosition))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRTransform, new Vector2(camera.pixelWidth / 2f, camera.pixelHeight / 2f), camera, out Vector2 localPlanePosition))
             {
                 // Adjust for canvas pivot
                 localPlanePosition.x = localPlanePosition.x + canvasRTransform.sizeDelta.x * canvasRTransform.pivot.x;
@@ -126,11 +126,13 @@ namespace TMPro.EditorUtilities
                 localPlanePosition.y = Mathf.Clamp(localPlanePosition.y, 0, canvasRTransform.sizeDelta.y);
 
                 // Adjust for anchoring
-                position.x = localPlanePosition.x - canvasRTransform.sizeDelta.x * itemTransform.anchorMin.x;
-                position.y = localPlanePosition.y - canvasRTransform.sizeDelta.y * itemTransform.anchorMin.y;
+                Vector2 sizeDelta = canvasRTransform.sizeDelta;
+                Vector2 anchorMin = itemTransform.anchorMin;
+                position.x = localPlanePosition.x - sizeDelta.x * anchorMin.x;
+                position.y = localPlanePosition.y - sizeDelta.y * anchorMin.y;
 
                 Vector3 minLocalPosition;
-                minLocalPosition.x = canvasRTransform.sizeDelta.x * (0 - canvasRTransform.pivot.x) + itemTransform.sizeDelta.x * itemTransform.pivot.x;
+                minLocalPosition.x = sizeDelta.x * (0 - canvasRTransform.pivot.x) + itemTransform.sizeDelta.x * itemTransform.pivot.x;
                 minLocalPosition.y = canvasRTransform.sizeDelta.y * (0 - canvasRTransform.pivot.y) + itemTransform.sizeDelta.y * itemTransform.pivot.y;
 
                 Vector3 maxLocalPosition;
@@ -146,27 +148,31 @@ namespace TMPro.EditorUtilities
             itemTransform.localScale = Vector3.one;
         }
 
-
         private static void PlaceUIElementRoot(GameObject element, MenuCommand menuCommand)
         {
             GameObject parent = menuCommand.context as GameObject;
             bool explicitParentChoice = true;
+
             if (parent == null)
             {
-                parent = GetOrCreateCanvasGameObject();
+                parent = RubyTMPro_CreateObjectMenu.GetOrCreateCanvasGameObject();
                 explicitParentChoice = false;
 
                 // If in Prefab Mode, Canvas has to be part of Prefab contents,
                 // otherwise use Prefab root instead.
                 PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+
                 if (prefabStage != null && !prefabStage.IsPartOfPrefabContents(parent))
+                {
                     parent = prefabStage.prefabContentsRoot;
+                }
             }
+
             if (parent.GetComponentInParent<Canvas>() == null)
             {
                 // Create canvas under context GameObject,
                 // and make that be the parent which UI element is added under.
-                GameObject canvas = CreateNewUI();
+                GameObject canvas = RubyTMPro_CreateObjectMenu.CreateNewUI();
                 canvas.transform.SetParent(parent.transform, false);
                 parent = canvas;
             }
@@ -184,24 +190,28 @@ namespace TMPro.EditorUtilities
 
             GameObjectUtility.EnsureUniqueNameForSibling(element);
 
-            // We have to fix up the undo name since the name of the object was only known after reparenting it.
+            // We have to fix up the undo name since the name of the object was only known after change parent it.
             Undo.SetCurrentGroupName("Create " + element.name);
 
             GameObjectUtility.SetParentAndAlign(element, parent);
-            if (!explicitParentChoice) // not a context click, so center in sceneview
-                SetPositionVisibleinSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
+
+            if (!explicitParentChoice) // not a context click, so center in SceneView
+            {
+                RubyTMPro_CreateObjectMenu.SetPositionVisibleInSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
+            }
 
             Undo.RegisterCreatedObjectUndo(element, "Create " + element.name);
 
             Selection.activeGameObject = element;
         }
 
-
-        static public GameObject CreateNewUI()
+        private static GameObject CreateNewUI()
         {
             // Root for the UI
-            var root = new GameObject("Canvas");
-            root.layer = LayerMask.NameToLayer(kUILayerName);
+            GameObject root = new GameObject("Canvas")
+            {
+                layer = LayerMask.NameToLayer(RubyTMPro_CreateObjectMenu.UI_LAYER_NAME)
+            };
             Canvas canvas = root.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             root.AddComponent<CanvasScaler>();
@@ -211,6 +221,7 @@ namespace TMPro.EditorUtilities
             StageUtility.PlaceGameObjectInCurrentStage(root);
             bool customScene = false;
             PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+
             if (prefabStage != null)
             {
                 root.transform.SetParent(prefabStage.prefabContentsRoot.transform, false);
@@ -224,70 +235,85 @@ namespace TMPro.EditorUtilities
             // It can be argued for or against placing it in the user scenes,
             // but let's not modify scene user is not currently looking at.
             if (!customScene)
-                CreateEventSystem(false);
+            {
+                RubyTMPro_CreateObjectMenu.CreateEventSystem(false);
+            }
+
             return root;
         }
 
-
-        private static void CreateEventSystem(bool select)
+        private static void CreateEventSystem(bool select, GameObject parent = null)
         {
-            CreateEventSystem(select, null);
-        }
+            EventSystem eventSystem = Object.FindObjectOfType<EventSystem>();
 
-
-        private static void CreateEventSystem(bool select, GameObject parent)
-        {
-            var esys = Object.FindObjectOfType<EventSystem>();
-            if (esys == null)
+            if (eventSystem == null)
             {
-                var eventSystem = new GameObject("EventSystem");
-                GameObjectUtility.SetParentAndAlign(eventSystem, parent);
-                esys = eventSystem.AddComponent<EventSystem>();
-                eventSystem.AddComponent<StandaloneInputModule>();
+                GameObject goEventSystem = new GameObject("EventSystem");
+                GameObjectUtility.SetParentAndAlign(goEventSystem, parent);
+                eventSystem = goEventSystem.AddComponent<EventSystem>();
+                goEventSystem.AddComponent<StandaloneInputModule>();
 
-                Undo.RegisterCreatedObjectUndo(eventSystem, "Create " + eventSystem.name);
+                Undo.RegisterCreatedObjectUndo(goEventSystem, "Create " + goEventSystem.name);
             }
 
-            if (select && esys != null)
+            if (select && eventSystem != null)
             {
-                Selection.activeGameObject = esys.gameObject;
+                Selection.activeGameObject = eventSystem.gameObject;
             }
         }
-
 
         // Helper function that returns a Canvas GameObject; preferably a parent of the selection, or other existing Canvas.
-        static public GameObject GetOrCreateCanvasGameObject()
+        private static GameObject GetOrCreateCanvasGameObject()
         {
             GameObject selectedGo = Selection.activeGameObject;
 
-            // Try to find a gameobject that is the selected GO or one if its parents.
-            Canvas canvas = (selectedGo != null) ? selectedGo.GetComponentInParent<Canvas>() : null;
-            if (IsValidCanvas(canvas))
+            // Try to find a gameObject that is the selected GO or one if its parents.
+            Canvas canvas = selectedGo != null ? selectedGo.GetComponentInParent<Canvas>() : null;
+
+            if (canvas == null)
+            {
+                return null;
+            }
+
+            if (RubyTMPro_CreateObjectMenu.IsValidCanvas(canvas))
+            {
                 return canvas.gameObject;
+            }
 
             // No canvas in selection or its parents? Then use any valid canvas.
             // We have to find all loaded Canvases, not just the ones in main scenes.
             Canvas[] canvasArray = StageUtility.GetCurrentStageHandle().FindComponentsOfType<Canvas>();
-            for (int i = 0; i < canvasArray.Length; i++)
-                if (IsValidCanvas(canvasArray[i]))
-                    return canvasArray[i].gameObject;
+
+            foreach (Canvas t in canvasArray)
+            {
+                if (RubyTMPro_CreateObjectMenu.IsValidCanvas(t))
+                {
+                    return t.gameObject;
+                }
+            }
 
             // No canvas in the scene at all? Then create a new one.
-            return CreateNewUI();
+            return RubyTMPro_CreateObjectMenu.CreateNewUI();
         }
 
-        static bool IsValidCanvas(Canvas canvas)
+        private static bool IsValidCanvas(Canvas canvas)
         {
             if (canvas == null || !canvas.gameObject.activeInHierarchy)
+            {
                 return false;
+            }
 
             // It's important that the non-editable canvas from a prefab scene won't be rejected,
             // but canvases not visible in the Hierarchy at all do. Don't check for HideAndDontSave.
             if (EditorUtility.IsPersistent(canvas) || (canvas.hideFlags & HideFlags.HideInHierarchy) != 0)
+            {
                 return false;
+            }
 
             if (StageUtility.GetStageHandle(canvas.gameObject) != StageUtility.GetCurrentStageHandle())
+            {
                 return false;
+            }
 
             return true;
         }

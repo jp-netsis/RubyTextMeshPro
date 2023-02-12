@@ -1,66 +1,78 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace TMPro
 {
+    using static RubyTextMeshProDefinitions;
+
     public class RubyTextMeshProUGUI : TextMeshProUGUI
     {
-        protected enum RubyShowType
-        {
-            RUBY_ALIGNMENT,
-            BASE_ALIGNMENT
-        }
+        [Tooltip("v offset ruby. (em, px, %).")] [SerializeField]
+        private string rubyVerticalOffset = "1em";
 
-        // ruby tag
-        private static readonly Regex RubyRegex = new Regex(@"<r(uby)?=(?<ruby>[\s\S]*?)>(?<val>[\s\S]*?)<\/r(uby)?>");
+        [Tooltip("ruby scale. (1=100%)")] [SerializeField]
+        private float rubyScale = 0.5f;
 
-        [Tooltip("v offset ruby. (em, px, %).")]
-        [SerializeField] private string rubyVerticalOffset = "1em";
+        [Tooltip("ruby show type.")] [SerializeField]
+        private RubyShowType rubyShowType = RubyShowType.RUBY_ALIGNMENT;
 
-        [Tooltip("ruby scale. (1=100%)")]
-        [SerializeField] private float rubyScale = 0.5f;
+        [Tooltip("The height of the ruby line can be specified. (em, px, %).")] [SerializeField]
+        private string rubyLineHeight = "";
 
-        [Tooltip("ruby show type.")]
-        [SerializeField] private RubyShowType rubyShowType = RubyShowType.RUBY_ALIGNMENT;
+        [FormerlySerializedAs("m_uneditedText")] [SerializeField] [TextArea(5, 10)]
+        private string _uneditedText;
 
-        [Tooltip("all v compensation ruby.")]
-        [SerializeField] private bool allVCompensationRuby = false;
-        [Tooltip("all ruby v compensation. (em, px, %).")]
-        [SerializeField] private string allVCompensationRubyLineHeight = "1.945em";
-
-        [SerializeField]
-        [TextArea(5, 10)]
-        private string m_uneditedText;
-        
+        [Obsolete("This setter will be discontinued.Use uneditedText instead.")]
         public string UnditedText
         {
-            set { 
-                m_uneditedText = value; 
-                SetTextCustom(m_uneditedText);
+            set
+            {
+                this._uneditedText = value;
+                this.SetTextCustom(this._uneditedText);
             }
         }
+
+        public string uneditedText
+        {
+            set
+            {
+                this._uneditedText = value;
+                this.SetTextCustom(this._uneditedText);
+            }
+        }
+
+#if UNITY_EDITOR
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            this.SetTextCustom(this._uneditedText);
+        }
+#endif
 
         private void SetTextCustom(string value)
         {
-            text = ReplaceRubyTags(value);
+            this.text = this.ReplaceRubyTags(value);
 
             // m_havePropertiesChanged : text changed => true, ForceMeshUpdate in OnPreRenderCanvas => false
-            if (m_havePropertiesChanged)
+            if (this.m_havePropertiesChanged)
             {
-                ForceMeshUpdate();
+                this.ForceMeshUpdate();
             }
         }
-        
+
         public override void ForceMeshUpdate(bool ignoreActiveState = false, bool forceTextReparsing = false)
         {
-            base.ForceMeshUpdate(ignoreActiveState,forceTextReparsing);
-            if (m_enableAutoSizing)
+            base.ForceMeshUpdate(ignoreActiveState, forceTextReparsing);
+
+            if (this.m_enableAutoSizing)
             {
                 // change auto size timing, update ruby tag size.
-                text = ReplaceRubyTags(m_uneditedText);
-                base.ForceMeshUpdate(ignoreActiveState,forceTextReparsing);
+                this.text = this.ReplaceRubyTags(this._uneditedText);
+                base.ForceMeshUpdate(ignoreActiveState, forceTextReparsing);
             }
         }
 
@@ -68,51 +80,64 @@ namespace TMPro
         /// replace ruby tags.
         /// </summary>
         /// <param name="str"></param>
-        /// <returns>relpaced str</returns>
+        /// <returns>replaced str</returns>
         private string ReplaceRubyTags(string str)
         {
-            if (string.IsNullOrEmpty(str)) return str;
+            if (string.IsNullOrEmpty(str))
+            {
+                return str;
+            }
+
             // warning! bad Know-how
             // Can not get GetPreferredValues("\u00A0").x at width,
             // add string and calculate.
             // and Use GetPreferredValues, change this.m_maxFontSize value.
-            var nonBreakSpaceW = GetPreferredValues("\u00A0a").x - GetPreferredValues("a").x;
-            var fontSizeScale = 1f;
+            float nonBreakSpaceW = this.GetPreferredValues("\u00A0a").x - this.GetPreferredValues("a").x;
+            float fontSizeScale = 1f;
+
             if (this.m_enableAutoSizing)
             {
-                fontSizeScale = (this.m_fontSize / this.m_maxFontSize);
+                fontSizeScale = this.m_fontSize / this.m_maxFontSize;
             }
-            var dir = isRightToLeftText ? 1 : -1;
+
+            int dir = this.isRightToLeftText ? 1 : -1;
             // Q. Why (m_isOrthographic ? 1 : 10f) => A. TMP_Text.cs L7622, L7625 
-            var hiddenSpaceW = dir * nonBreakSpaceW * (m_isOrthographic ? 1 : 10f) * rubyScale * fontSizeScale;
+            float hiddenSpaceW = dir * nonBreakSpaceW * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale * fontSizeScale;
             // Replace <ruby> tags text layout.
-            var matches = RubyRegex.Matches(str);
-            var compensationOffset = 0f;
+            MatchCollection matches = RubyTextMeshProDefinitions.RUBY_REGEX.Matches(str);
+
             foreach (Match match in matches)
             {
-                if (match.Groups.Count != 5) continue;
-                var fullMatch = match.Groups[0].ToString();
-                var rubyText = match.Groups["ruby"].ToString();
-                var baseText = match.Groups["val"].ToString();
+                if (match.Groups.Count != 5)
+                {
+                    continue;
+                }
 
-                var rubyTextW = GetPreferredValues(rubyText).x * (m_isOrthographic ? 1 : 10f) * rubyScale;
-                var baseTextW = GetPreferredValues(baseText).x * (m_isOrthographic ? 1 : 10f);
+                string fullMatch = match.Groups[0].ToString();
+                string rubyText = match.Groups["ruby"].ToString();
+                string baseText = match.Groups["val"].ToString();
+
+                float rubyTextW = this.GetPreferredValues(rubyText).x * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale;
+                float baseTextW = this.GetPreferredValues(baseText).x * (this.m_isOrthographic ? 1 : 10f);
+
                 if (this.m_enableAutoSizing)
                 {
                     rubyTextW *= fontSizeScale;
                     baseTextW *= fontSizeScale;
                 }
-                var rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
-                compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
-                var replace = CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, isRightToLeftText);
+
+                float rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
+                float compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
+                string replace = this.CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, this.isRightToLeftText);
                 str = str.Replace(fullMatch, replace);
             }
-            if (allVCompensationRuby)
-            {
+
+            if (!string.IsNullOrWhiteSpace(this.rubyLineHeight))
                 // warning! bad Know-how
                 // line-height tag is down the next line start.
                 // now line can't change, corresponding by putting a hidden ruby
-                str = $"<line-height={allVCompensationRubyLineHeight}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>" + str;
+            {
+                str = $"<line-height={this.rubyLineHeight}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>" + str;
             }
 
             return str;
@@ -120,23 +145,24 @@ namespace TMPro
 
         private string CreateReplaceValue(string baseText, string rubyText, float rubyTextOffset, float compensationOffset, bool isRightToLeftText)
         {
-            var replace = string.Empty;
-            switch (rubyShowType)
+            string replace = string.Empty;
+
+            switch (this.rubyShowType)
             {
                 case RubyShowType.BASE_ALIGNMENT:
-                    replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                    replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
                     break;
-                
+
                 case RubyShowType.RUBY_ALIGNMENT:
                     if (isRightToLeftText)
                     {
                         if (compensationOffset < 0)
                         {
-                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
                         }
                         else
                         {
-                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
+                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
                         }
                     }
                     else
@@ -144,12 +170,12 @@ namespace TMPro
                         if (compensationOffset < 0)
                         {
                             replace =
-                                $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                                $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
                         }
                         else
                         {
                             replace =
-                                $"<nobr>{baseText}<space={rubyTextOffset}><voffset={rubyVerticalOffset}><size={rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+                                $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
                         }
                     }
 
@@ -158,15 +184,5 @@ namespace TMPro
 
             return replace;
         }
-
-#if UNITY_EDITOR
-
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            
-            SetTextCustom(m_uneditedText);
-        }
-#endif
     }
 }

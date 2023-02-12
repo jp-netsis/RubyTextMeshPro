@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -8,9 +7,7 @@ public class SampleRubyTMPUGUI : MonoBehaviour
 {
     public float span = 3f;
 
-    RubyTextMeshProUGUI rubyTextMeshPro;
-
-    string[] strArray = new string[]
+    private readonly string[] strArray =
     {
         "<ruby=いち>壱</ruby>",
         "<ruby=に>弐</ruby>",
@@ -21,36 +18,38 @@ public class SampleRubyTMPUGUI : MonoBehaviour
         "<ruby=しち>漆</ruby>",
         "<ruby=はち>捌</ruby>",
         "<ruby=きゅう>玖</ruby>",
-        "<ruby=じゅう>拾</ruby>",
+        "<ruby=じゅう>拾</ruby>"
     };
 
-    int strIndex;
+    private RubyTextMeshProUGUI rubyTextMeshPro;
+
+    private int strIndex;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        rubyTextMeshPro = GetComponent<RubyTextMeshProUGUI>();
-        StartCoroutine(TimeUpdate());
+        this.rubyTextMeshPro = this.GetComponent<RubyTextMeshProUGUI>();
+        this.StartCoroutine(this.TimeUpdate());
     }
 
     // Update is called once per frame
-    IEnumerator TimeUpdate()
+    private IEnumerator TimeUpdate()
     {
         while (true)
         {
-            yield return new WaitForSeconds(span);
-            UpdateText();
+            yield return new WaitForSeconds(this.span);
+            this.UpdateText();
         }
     }
 
-    void UpdateText()
+    private void UpdateText()
     {
-        rubyTextMeshPro.UnditedText = strArray[strIndex];
-        strIndex++;
+        this.rubyTextMeshPro.uneditedText = this.strArray[this.strIndex];
+        this.strIndex++;
+
         if (this.strArray.Length <= this.strIndex)
         {
             this.strIndex = 0;
         }
     }
-
 }

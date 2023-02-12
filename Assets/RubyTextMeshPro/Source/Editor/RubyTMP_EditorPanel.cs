@@ -1,33 +1,31 @@
-﻿using UnityEngine;
-using UnityEditor;
-using TMPro;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace TMPro.EditorUtilities
 {
-    [CustomEditor(typeof(RubyTextMeshPro), true), CanEditMultipleObjects]
+    [CustomEditor(typeof(RubyTextMeshPro), true)]
+    [CanEditMultipleObjects]
     public class RubyTMP_EditorPanel : TMP_EditorPanel
     {
         //Labels and Tooltips
-        private static readonly GUIContent k_RtlToggleLabel = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
+        private static readonly GUIContent RTL_TOGGLE_LABEL = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
 
         private SerializedProperty rubyScale;
         private SerializedProperty rubyVerticalOffset;
         private SerializedProperty rubyShowType;
-        private SerializedProperty allVCompensationRuby;
-        private SerializedProperty allVCompensationRubyLineHeight;
-        private SerializedProperty m_UneditedText;
-        private string m_UneditedRtlText;
+        private SerializedProperty rubyLineHeight;
+        private string uneditedRtlText;
+        private SerializedProperty uneditedText;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            rubyScale = serializedObject.FindProperty("rubyScale");
-            rubyVerticalOffset = serializedObject.FindProperty("rubyVerticalOffset");
-            rubyShowType = serializedObject.FindProperty("rubyShowType");
-            allVCompensationRuby = serializedObject.FindProperty("allVCompensationRuby");
-            allVCompensationRubyLineHeight = serializedObject.FindProperty("allVCompensationRubyLineHeight");
-            m_UneditedText = serializedObject.FindProperty("m_uneditedText");
+            this.rubyScale = this.serializedObject.FindProperty("rubyScale");
+            this.rubyVerticalOffset = this.serializedObject.FindProperty("rubyVerticalOffset");
+            this.rubyShowType = this.serializedObject.FindProperty("rubyShowType");
+            this.rubyLineHeight = this.serializedObject.FindProperty("rubyLineHeight");
+            this.uneditedText = this.serializedObject.FindProperty("_uneditedText");
         }
 
         /// <summary>
@@ -36,27 +34,30 @@ namespace TMPro.EditorUtilities
         public override void OnInspectorGUI()
         {
             // Make sure Multi selection only includes TMP Text objects.
-            if (IsMixSelectionTypes()) return;
+            if (this.IsMixSelectionTypes())
+            {
+                return;
+            }
 
-            serializedObject.Update();
+            this.serializedObject.Update();
 
-            DrawRubyTextInput(); // DrawTextInput();
+            this.DrawRubyTextInput(); // DrawTextInput();
 
-            DrawMainSettings();
+            this.DrawMainSettings();
 
-            DrawExtraSettings();
+            this.DrawExtraSettings();
 
             EditorGUILayout.Space();
 
-            if (m_HavePropertiesChanged)
+            if (this.m_HavePropertiesChanged)
             {
-                m_HavePropertiesChanged = false;
-                m_TextComponent.havePropertiesChanged = true;
-                m_TextComponent.ComputeMarginSize();
-                EditorUtility.SetDirty(target);
+                this.m_HavePropertiesChanged = false;
+                this.m_TextComponent.havePropertiesChanged = true;
+                this.m_TextComponent.ComputeMarginSize();
+                EditorUtility.SetDirty(this.target);
             }
 
-            serializedObject.ApplyModifiedProperties();
+            this.serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>
@@ -72,7 +73,7 @@ namespace TMPro.EditorUtilities
             EditorGUI.indentLevel = 0;
 
             // If the text component is linked, disable the text input box.
-            if (m_ParentLinkedTextComponentProp.objectReferenceValue != null)
+            if (this.m_ParentLinkedTextComponentProp.objectReferenceValue != null)
             {
                 EditorGUILayout.HelpBox("The Text Input Box is disabled due to this text component being linked to another.", MessageType.Info);
             }
@@ -82,32 +83,36 @@ namespace TMPro.EditorUtilities
                 float labelWidth = EditorGUIUtility.labelWidth;
                 EditorGUIUtility.labelWidth = 110f;
 
-                m_IsRightToLeftProp.boolValue = EditorGUI.Toggle(new Rect(rect.width - 120, rect.y + 3, 130, 20), k_RtlToggleLabel, m_IsRightToLeftProp.boolValue);
+                this.m_IsRightToLeftProp.boolValue = EditorGUI.Toggle(new Rect(rect.width - 120, rect.y + 3, 130, 20), RubyTMP_EditorPanel.RTL_TOGGLE_LABEL, this.m_IsRightToLeftProp.boolValue);
 
                 EditorGUIUtility.labelWidth = labelWidth;
 
                 EditorGUI.BeginChangeCheck();
-                EditorGUILayout.PropertyField(m_UneditedText);
+                EditorGUILayout.PropertyField(this.uneditedText);
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    m_HavePropertiesChanged = true;
+                    this.m_HavePropertiesChanged = true;
                 }
 
-                if (m_IsRightToLeftProp.boolValue)
+                if (this.m_IsRightToLeftProp.boolValue)
                 {
                     // Copy source text to RTL string
-                    m_RtlText = string.Empty;
-                    string sourceText = m_UneditedText.stringValue;
+                    this.m_RtlText = string.Empty;
+                    string sourceText = this.uneditedText.stringValue;
 
                     // Reverse Text displayed in Text Input Box
                     for (int i = 0; i < sourceText.Length; i++)
-                        m_RtlText += sourceText[sourceText.Length - i - 1];
+                    {
+                        this.m_RtlText += sourceText[sourceText.Length - i - 1];
+                    }
 
                     GUILayout.Label("RTL Text Input");
 
                     EditorGUI.BeginChangeCheck();
-                    m_RtlText = EditorGUILayout.TextArea(m_RtlText, TMP_UIStyleManager.wrappingTextArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_TextProp) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandWidth(true));
+
+                    this.m_RtlText = EditorGUILayout.TextArea(this.m_RtlText, TMP_UIStyleManager.wrappingTextArea, GUILayout.Height(EditorGUI.GetPropertyHeight(this.m_TextProp) - EditorGUIUtility.singleLineHeight),
+                        GUILayout.ExpandWidth(true));
 
                     if (EditorGUI.EndChangeCheck())
                     {
@@ -115,29 +120,33 @@ namespace TMPro.EditorUtilities
                         sourceText = string.Empty;
 
                         // Reverse Text displayed in Text Input Box
-                        for (int i = 0; i < m_RtlText.Length; i++)
-                            sourceText += m_RtlText[m_RtlText.Length - i - 1];
+                        for (int i = 0; i < this.m_RtlText.Length; i++)
+                        {
+                            sourceText += this.m_RtlText[this.m_RtlText.Length - i - 1];
+                        }
 
-                        m_UneditedText.stringValue = sourceText;
+                        this.uneditedText.stringValue = sourceText;
                     }
                 }
 
                 // show TextMeshPro text
                 EditorGUILayout.LabelField("Convert Text");
-                EditorGUILayout.SelectableLabel(m_TextProp.stringValue, EditorStyles.textArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_UneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandHeight(true));
-                if (m_IsRightToLeftProp.boolValue)
+                EditorGUILayout.SelectableLabel(this.m_TextProp.stringValue, EditorStyles.textArea, GUILayout.Height(EditorGUI.GetPropertyHeight(this.uneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandHeight(true));
+
+                if (this.m_IsRightToLeftProp.boolValue)
                 {
-                    var RtlText = string.Empty;
-                    string sourceText = m_TextProp.stringValue;
+                    string rtlText = string.Empty;
+                    string sourceText = this.m_TextProp.stringValue;
 
                     EditorGUILayout.LabelField("Convert RtlText");
 
                     // Reverse Text displayed in Text Input Box
                     for (int i = 0; i < sourceText.Length; i++)
                     {
-                        RtlText += sourceText[sourceText.Length - i - 1];
+                        rtlText += sourceText[sourceText.Length - i - 1];
                     }
-                    EditorGUILayout.SelectableLabel(RtlText, EditorStyles.textArea, GUILayout.Height(EditorGUI.GetPropertyHeight(m_UneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandHeight(true));
+
+                    EditorGUILayout.SelectableLabel(rtlText, EditorStyles.textArea, GUILayout.Height(EditorGUI.GetPropertyHeight(this.uneditedText) - EditorGUIUtility.singleLineHeight), GUILayout.ExpandHeight(true));
                 }
             }
         }
@@ -148,16 +157,16 @@ namespace TMPro.EditorUtilities
 
             EditorGUILayout.LabelField("Ruby Param", EditorStyles.boldLabel);
             ++EditorGUI.indentLevel;
+
             {
-                EditorGUILayout.PropertyField(rubyScale);
-                EditorGUILayout.PropertyField(rubyVerticalOffset);
-                EditorGUILayout.PropertyField(rubyShowType);
-                EditorGUILayout.PropertyField(allVCompensationRuby);
-                EditorGUILayout.PropertyField(allVCompensationRubyLineHeight);
+                EditorGUILayout.PropertyField(this.rubyScale);
+                EditorGUILayout.PropertyField(this.rubyVerticalOffset);
+                EditorGUILayout.PropertyField(this.rubyShowType);
+                EditorGUILayout.PropertyField(this.rubyLineHeight);
             }
             --EditorGUI.indentLevel;
 
-            serializedObject.ApplyModifiedProperties();
+            this.serializedObject.ApplyModifiedProperties();
         }
     }
 }
