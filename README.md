@@ -14,9 +14,21 @@ You need to have `TextMeshPro` plugin in your project. You can install TMPro via
 
 I checked Unity and TextMeshPro Version are below.
 
-UnityVer:2021.3.0f1 
+UnityVer:2021.3.11f1 
 
 TextMeshProVer:3.0.6
+
+# Disruptive change
+
+### ver 1.1
+
+[Ja]
+削除 : `allVCompensationRuby` / `allVCompensationRubyLineHeight` : `rubyLineHeight` が空文字の場合、 いままでの `allVCompensationRuby:false` と同等の効果になります。また、 `rubyLineHeight` に値が入っている場合、 `allVCompensationRubyLineHeight` の値と同様の効果になります。
+削除予定 : `RubyTextMeshPro.UnditedText` / `RubyTextMeshProUGUI.UnditedText` : 次のバージョンで削除されます。`uneditedText`をご使用ください。
+
+[En]
+Removed : `allVCompensationRuby` / `allVCompensationRubyLineHeight` : If `rubyLineHeight` is an empty string, it will be the `allVCompensationRuby:false` value up to now, and if `rubyLineHeight` is a value, it will be the `allVCompensationRubyLineHeight` value.
+Obsolete : `RubyTextMeshPro.UnditedText` / `RubyTextMeshProUGUI.UnditedText` : Will be removed in the next version. Please use `uneditedText`.
 
 # Features
 ### Realtime Ruby Text
@@ -49,9 +61,13 @@ BASE_ALIGNMENT 元の文字に合わせて文字を表示します
 
 ![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/align_width.gif)
 
-### AllVCompensation
+### rubyLineHeight
 
-ルビを使用しない場合に同じ隙間を持たせる機能です
+この機能により、rubyを使用しない場合でも、同じ隙間を持つことができます。
+この文字列を空にすることで、この機能はスキップされます。
+
+This function allows you to have the same gap even if you don't use ruby.
+Empty this string to skip this feature.
 
 ![Example](https://github.com/jp-netsis/RubyTextMeshPro/blob/main/Screenshots/vcompensation.gif)
 
