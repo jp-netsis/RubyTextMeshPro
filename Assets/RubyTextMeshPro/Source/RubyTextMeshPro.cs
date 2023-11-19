@@ -47,6 +47,11 @@ namespace TMPro
         private RubyShowType _rubyShowType = RubyShowType.RUBY_ALIGNMENT;
         public RubyShowType rubyShowType => this._rubyShowType;
 
+        [Tooltip("Affects only BASE_NO_OVERRAP_RUBY_ALIGNMENT ruby margin.")] 
+        [SerializeField]
+        private float _rubyMargin = 10;
+        public float rubyMargin => this._rubyMargin;
+
 #if UNITY_EDITOR
 
         protected override void OnValidate()
@@ -105,7 +110,7 @@ namespace TMPro
                 fontSizeScale = this.m_fontSize / this.m_maxFontSize;
             }
 
-            int dir = this.isRightToLeftText ? 1 : -1;
+            int dir = this.isRightToLeftText ? -1 : 1;
             // Q. Why (m_isOrthographic ? 1 : 10f) => A. TMP_Text.cs L7622, L7625 
             float hiddenSpaceW = dir * nonBreakSpaceW * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale * fontSizeScale;
             str = this.ReplaceRubyTags(str, dir, fontSizeScale, hiddenSpaceW);

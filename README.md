@@ -14,11 +14,45 @@ You need to have `TextMeshPro` plugin in your project. You can install TMPro via
 
 I checked Unity and TextMeshPro Version are below.
 
-UnityVer:2021.3.11f1 
+UnityVer:2022.3.13f1 
 
 TextMeshProVer:3.0.6
 
+[Ja]
+
+TextMeshProは`Unity 2023.2`から[非推奨](https://forum.unity.com/threads/2023-2-latest-development-on-textmesh-pro.1434757/)になります。
+
+この意味は、namespaceは変わらず、現状のベータ版ではTextMeshProが `com.unity.ui` に統合されたため、TextMeshProパッケージをパッケージマネージャからインストールすると重複しエラーが起こる状態になります。
+
+そのため、RubyTexxtMeshProをそのまま使用することは現状可能だと思われます。
+
+[En]
+
+TextMeshPro will be [deprecated](https://forum.unity.com/threads/2023-2-latest-development-on-textmesh-pro.1434757/) starting `Unity 2023.2`.
+
+What this means is that the namespace remains the same, but in the current beta version, TextMeshPro has been integrated into `com.unity.ui`, so installing the TextMeshPro package from the package manager will result in duplication and errors.
+
+Therefore, it is currently possible to use RubyTexxtMeshPro as is.
+
 # Disruptive change
+
+### ver 1.2
+
+[Ja]
+追加 : `RubyTextMeshProDefinitions` に `BASE_NO_OVERRAP_RUBY_ALIGNMENT` を追加しました。
+追加 : `BASE_NO_OVERRAP_RUBY_ALIGNMENT` 用に `rubyMargin` を追加しました。 ルビの隙間を指定します。
+変更 : SerializeField パラメータを `_<xyz>` に変更しました。 以前のバージョンと互換性を保つため `FormerlySerializedAs(<xyz>)` を定義していますが、ご注意ください。
+変更 :　`BASE_NO_OVERRAP_RUBY_ALIGNMENT` 用にルビとベースの文字の描画位置を計算する処理を追加しました。負荷が上がっている可能性があります。
+削除 : `RubyTextMeshPro.UnditedText` / `RubyTextMeshProUGUI.UnditedText` : 削除されました。 `uneditedText` をご使用ください。
+
+[En]
+Added : `BASE_NO_OVERRAP_RUBY_ALIGNMENT` for `RubyTextMeshProDefinitions`.
+Added : `rubyMargin` for `BASE_NO_OVERRAP_RUBY_ALIGNMENT`. Specify the ruby margin.
+Changed : SerializeField parameter to `_<xyz>`. Note that `FormerlySerializedAs(<xyz>)` is defined for compatibility with previous versions.
+Changed : Added processing for `BASE_NO_OVERRAP_RUBY_ALIGNMENT` to calculate the drawing position of ruby and base characters. This may have increased the load.
+Removed : `RubyTextMeshPro.UnditedText` / `RubyTextMeshProUGUI.UnditedText` : removed. Please use `uneditedText`.
+
+Translated with www.DeepL.com/Translator (free version)
 
 ### ver 1.1
 
@@ -41,6 +75,36 @@ It can also work with double quotes.
 `<ruby="ice">fire</ruby>` tag or `<r="ice">fire</r>` tag.
 
 # How To Use
+
+## 1. Load from github
+
+[Ja]
+
+GitHubからインストールをすることが可能です。
+
+この場合、TextMeshPro3.0.6の依存情報を残しているため、TextMeshProをインストールしていない場合、インストールされます。
+
+
+[En]
+
+There is a way to install from GitHub.
+
+In this case, the dependency information for TextMeshPro 3.0.6 is retained, so if TextMeshPro is not installed, it will be installed.
+
+[Install]
+
+Unity > Window > PackageManager > + > Add package from git url... > Add the following
+
+`https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v1.2.0`
+
+## 2. Copy Source Only
+
+ソースのみコピーする方法があります。 これは。`Unity2023.2` 以降で現在有効です。
+Unity2023の安定版が出たら、RubyTextMeshProは com.unity.ui に依存するよう変更します。
+
+There is a way to copy only the source. This is. Currently valid for `Unity2023.2` and later.
+Once a stable version of Unity2023 is available, RubyTextMeshPro will be changed to depend on com.unity.ui.
+
 * (1). あなたには`TextMeshPro`プラグインが必要です。`Package Manager`からインストールしてください。Asset StoreからのText Mesh Proのインストールはしないでください。
 * (1). You need to have `TextMeshPro` plugin in your project. You can install TMPro via `Package Manager`. DO NOT Install Text Mesh Pro from Asset Store.
 

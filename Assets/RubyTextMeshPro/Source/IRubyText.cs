@@ -13,7 +13,6 @@ namespace TMPro
         public bool isRightToLeftText { get; set; }
         // Function to Calculate the Preferred Width and Height of the text object given a certain string.
         public Vector2 GetPreferredValues(string str);
-
         #endregion
 
         #region RUBY_TMP
@@ -25,7 +24,7 @@ namespace TMPro
         public string rubyLineHeight { get; }
         // ruby show type.
         public RubyTextMeshProDefinitions.RubyShowType rubyShowType { get; }
-
+        public float rubyMargin { get; }
         #endregion
 
     }
