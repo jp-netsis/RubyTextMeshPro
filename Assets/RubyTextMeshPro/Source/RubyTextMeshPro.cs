@@ -7,41 +7,50 @@ namespace TMPro
 {
     using static RubyTextMeshProDefinitions;
 
-    public class RubyTextMeshPro : TextMeshPro
+    public class RubyTextMeshPro : TextMeshPro, IRubyText
     {
-        [Tooltip("v offset ruby. (em, px, %).")] [SerializeField]
-        private string rubyVerticalOffset = "1em";
+        [Tooltip("v offset ruby. (em, px, %).")]
+        [SerializeField]
+        [FormerlySerializedAs("rubyVerticalOffset")] 
+        private string _rubyVerticalOffset = "1em";
+        public string rubyVerticalOffset => this._rubyVerticalOffset;
 
-        [Tooltip("ruby scale. (1=100%)")] [SerializeField]
-        private float rubyScale = 0.5f;
+        [Tooltip("ruby scale. (1=100%)")]
+        [SerializeField]
+        [FormerlySerializedAs("rubyScale")] 
+        private float _rubyScale = 0.5f;
+        public float rubyScale => this._rubyScale;
 
-        [Tooltip("The height of the ruby line can be specified. (em, px, %).")] [SerializeField]
-        private string rubyLineHeight = "";
+        [Tooltip("The height of the ruby line can be specified. (em, px, %).")]
+        [SerializeField]
+        [FormerlySerializedAs("rubyLineHeight")] 
+        private string _rubyLineHeight = "";
+        public string rubyLineHeight => this._rubyLineHeight;
 
-        [FormerlySerializedAs("m_uneditedText")] [SerializeField] [TextArea(5, 10)]
+        [TextArea(5, 10)]
+        [SerializeField]
+        [FormerlySerializedAs("m_uneditedText")]
         private string _uneditedText;
-
-        [Tooltip("ruby show type.")] [SerializeField]
-        private RubyShowType rubyShowType = RubyShowType.RUBY_ALIGNMENT;
-
-        [Obsolete("This setter will be discontinued.Use uneditedText instead.")]
-        public string UnditedText
-        {
-            set
-            {
-                this._uneditedText = value;
-                this.SetTextCustom(this._uneditedText);
-            }
-        }
-
         public string uneditedText
         {
+            get => this._uneditedText;
             set
             {
                 this._uneditedText = value;
                 this.SetTextCustom(this._uneditedText);
             }
         }
+
+        [Tooltip("ruby show type.")] 
+        [SerializeField]
+        [FormerlySerializedAs("rubyShowType")]
+        private RubyShowType _rubyShowType = RubyShowType.RUBY_ALIGNMENT;
+        public RubyShowType rubyShowType => this._rubyShowType;
+
+        [Tooltip("Affects only BASE_NO_OVERRAP_RUBY_ALIGNMENT ruby margin.")] 
+        [SerializeField]
+        private float _rubyMargin = 10;
+        public float rubyMargin => this._rubyMargin;
 
 #if UNITY_EDITOR
 
@@ -101,149 +110,12 @@ namespace TMPro
                 fontSizeScale = this.m_fontSize / this.m_maxFontSize;
             }
 
-            int dir = this.isRightToLeftText ? 1 : -1;
+            int dir = this.isRightToLeftText ? -1 : 1;
             // Q. Why (m_isOrthographic ? 1 : 10f) => A. TMP_Text.cs L7622, L7625 
             float hiddenSpaceW = dir * nonBreakSpaceW * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale * fontSizeScale;
-            // Replace <ruby> tags text layout.
-            MatchCollection matches = RubyTextMeshProDefinitions.RUBY_REGEX.Matches(str);
-
-            foreach (Match match in matches)
-            {
-                if (match.Groups.Count != 5)
-                {
-                    continue;
-                }
-
-                string fullMatch = match.Groups[0].ToString();
-                string rubyText = match.Groups["ruby"].ToString();
-                string baseText = match.Groups["val"].ToString();
-
-                float rubyTextW = this.GetPreferredValues(rubyText).x * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale;
-                float baseTextW = this.GetPreferredValues(baseText).x * (this.m_isOrthographic ? 1 : 10f);
-
-                if (this.m_enableAutoSizing)
-                {
-                    rubyTextW *= fontSizeScale;
-                    baseTextW *= fontSizeScale;
-                }
-
-                float rubyTextOffset = dir * (baseTextW / 2f + rubyTextW / 2f);
-                float compensationOffset = -dir * ((baseTextW - rubyTextW) / 2f);
-                string replace = this.CreateReplaceValue(baseText, rubyText, rubyTextOffset, compensationOffset, this.isRightToLeftText);
-                str = str.Replace(fullMatch, replace);
-            }
-
-            if (!string.IsNullOrWhiteSpace(this.rubyLineHeight))
-                // warning! bad Know-how
-                // line-height tag is down the next line start.
-                // now line can't change, corresponding by putting a hidden ruby
-            {
-                str = $"<line-height={this.rubyLineHeight}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>" + str;
-            }
+            str = this.ReplaceRubyTags(str, dir, fontSizeScale, hiddenSpaceW);
 
             return str;
-        }
-
-        private string CreateReplaceValue(string baseText, string rubyText, float rubyTextOffset, float compensationOffset, bool isRightToLeftText)
-        {
-            string replace = string.Empty;
-
-            switch (this.rubyShowType)
-            {
-                case RubyShowType.BASE_ALIGNMENT:
-                    replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
-                    break;
-
-                case RubyShowType.RUBY_ALIGNMENT:
-                    if (isRightToLeftText)
-                    {
-                        if (compensationOffset < 0)
-                        {
-                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
-                        }
-                        else
-                        {
-                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
-                        }
-                    }
-                    else
-                    {
-                        if (compensationOffset < 0)
-                        {
-                            replace = $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset></nobr>";
-                        }
-                        else
-                        {
-                            replace = $"<nobr>{baseText}<space={rubyTextOffset}><voffset={this.rubyVerticalOffset}><size={this.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
-                        }
-                    }
-
-                    break;
-            }
-
-            return replace;
-        }
-
-        /// <summary>
-        /// TMP_Text ConvertToFloat
-        /// if (startIndex == 0) { lastIndex = 0; return -9999; } delete version
-        /// </summary>
-        protected float ConvertToFloatOrigin(char[] chars, int startIndex, int lastIndex)
-        {
-            int endIndex = lastIndex;
-            bool isIntegerValue = true;
-            float decimalPointMultiplier = 0;
-
-            // Set value multiplier checking the first character to determine if we are using '+' or '-'
-            int valueSignMultiplier = 1;
-
-            if (chars[startIndex] == '+')
-            {
-                valueSignMultiplier = 1;
-                startIndex += 1;
-            }
-            else if (chars[startIndex] == '-')
-            {
-                valueSignMultiplier = -1;
-                startIndex += 1;
-            }
-
-            float value = 0;
-
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                uint c = chars[i];
-
-                if (c is >= '0' and <= '9' || c == '.')
-                {
-                    if (c == '.')
-                    {
-                        isIntegerValue = false;
-                        decimalPointMultiplier = 0.1f;
-                        continue;
-                    }
-
-                    //Calculate integer and floating point value
-                    if (isIntegerValue)
-                    {
-                        value = value * 10 + (c - 48) * valueSignMultiplier;
-                    }
-                    else
-                    {
-                        value = value + (c - 48) * decimalPointMultiplier * valueSignMultiplier;
-                        decimalPointMultiplier *= 0.1f;
-                    }
-
-                    continue;
-                }
-
-                if (c == ',')
-                {
-                    return value;
-                }
-            }
-
-            return value;
         }
     }
 }

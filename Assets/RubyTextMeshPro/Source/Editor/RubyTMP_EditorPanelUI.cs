@@ -10,23 +10,24 @@ namespace TMPro.EditorUtilities
         //Labels and Tooltips
         private static readonly GUIContent RTL_TOGGLE_LABEL = new GUIContent("Enable RTL Editor", "Reverses text direction and allows right to left editing.");
         private static readonly GUIContent STYLE_LABEL = new GUIContent("Text Style", "The style from a style sheet to be applied to the text.");
-        private string uneditedRtlText;
+
         private SerializedProperty uneditedText;
         private SerializedProperty rubyScale;
+        private SerializedProperty rubyVerticalOffset;
         private SerializedProperty rubyShowType;
         private SerializedProperty rubyLineHeight;
-
-        private SerializedProperty rubyVerticalOffset;
+        private SerializedProperty rubyMargin;
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            this.rubyScale = this.serializedObject.FindProperty("rubyScale");
-            this.rubyVerticalOffset = this.serializedObject.FindProperty("rubyVerticalOffset");
-            this.rubyShowType = this.serializedObject.FindProperty("rubyShowType");
-            this.rubyLineHeight = this.serializedObject.FindProperty("rubyLineHeight");
             this.uneditedText = this.serializedObject.FindProperty("_uneditedText");
+            this.rubyScale = this.serializedObject.FindProperty("_rubyScale");
+            this.rubyVerticalOffset = this.serializedObject.FindProperty("_rubyVerticalOffset");
+            this.rubyShowType = this.serializedObject.FindProperty("_rubyShowType");
+            this.rubyLineHeight = this.serializedObject.FindProperty("_rubyLineHeight");
+            this.rubyMargin = this.serializedObject.FindProperty("_rubyMargin");
         }
 
         /// <summary>
@@ -182,6 +183,7 @@ namespace TMPro.EditorUtilities
                 EditorGUILayout.PropertyField(this.rubyShowType);
                 EditorGUILayout.PropertyField(this.rubyVerticalOffset);
                 EditorGUILayout.PropertyField(this.rubyLineHeight);
+                EditorGUILayout.PropertyField(this.rubyMargin);
             }
             --EditorGUI.indentLevel;
 
