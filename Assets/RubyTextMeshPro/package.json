@@ -5,7 +5,7 @@
   "description": "Extension to add ruby tags to TextMeshPro.",
   "unity": "2021.3",
   "documentationUrl": "https://github.com/jp-netsis/RubyTextMeshPro",
-  "changelogUrl": "https://example.com/changelog.html",
+  "changelogUrl": "https://github.com/jp-netsis/RubyTextMeshPro/releases",
   "licensesUrl": "https://github.com/jp-netsis/RubyTextMeshPro/blob/main/LICENSE",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6"
