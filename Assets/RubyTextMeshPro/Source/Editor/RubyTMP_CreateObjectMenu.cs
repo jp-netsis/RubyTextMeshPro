@@ -1,9 +1,12 @@
-﻿using UnityEditor;
+﻿using System;
+using System.Reflection;
+using UnityEditor;
+using UnityEditor.Presets;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace TMPro.EditorUtilities
 {
@@ -33,9 +36,49 @@ namespace TMPro.EditorUtilities
             // Add support for new prefab mode
             StageUtility.PlaceGameObjectInCurrentStage(go);
 
-            RubyTextMeshPro textMeshPro = go.AddComponent<RubyTextMeshPro>();
-            textMeshPro.text = textMeshPro.uneditedText = "Sample text";
-            textMeshPro.alignment = TextAlignmentOptions.TopLeft;
+            RubyTextMeshPro textComponent = go.AddComponent<RubyTextMeshPro>();
+
+            Type type = typeof(RubyTextMeshPro);
+
+            FieldInfo isWaitingOnResourceLoadFieldInfo =
+                type.GetField("m_isWaitingOnResourceLoad", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
+            bool isWaitingOnResourceLoad = (bool)isWaitingOnResourceLoadFieldInfo.GetValue(textComponent);
+
+            if (isWaitingOnResourceLoad == false)
+            {
+                // Get reference to potential Presets for <TextMeshPro> component
+                Preset[] presets = Preset.GetDefaultPresetsForObject(textComponent);
+
+                if (presets == null || presets.Length == 0)
+                {
+                    textComponent.text = "Sample text";
+                    textComponent.alignment = TextAlignmentOptions.TopLeft;
+                }
+                else
+                {
+                    FieldInfo sortingLayerIdFieldInfo =
+                        type.GetField("_SortingLayerID", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
+                    int sortingLayerId = (int)sortingLayerIdFieldInfo.GetValue(textComponent);
+
+                    textComponent.renderer.sortingLayerID = sortingLayerId;
+                    textComponent.renderer.sortingOrder = sortingLayerId;
+                }
+
+                if (TMP_Settings.autoSizeTextContainer)
+                {
+                    Vector2 size = textComponent.GetPreferredValues(TMP_Math.FLOAT_MAX, TMP_Math.FLOAT_MAX);
+                    textComponent.rectTransform.sizeDelta = size;
+                }
+                else
+                {
+                    textComponent.rectTransform.sizeDelta = TMP_Settings.defaultTextMeshProTextContainerSize;
+                }
+            }
+            else
+            {
+                textComponent.text = "Sample text";
+                textComponent.alignment = TextAlignmentOptions.TopLeft;
+            }
 
             Undo.RegisterCreatedObjectUndo(go, "Create " + go.name);
 
@@ -55,15 +98,47 @@ namespace TMPro.EditorUtilities
         /// </summary>
         /// <param name="menuCommand"></param>
         [MenuItem("GameObject/UI/Text - RubyTextMeshPro", false, 2001)]
-        private static void CreateTextMeshProGuiObjectPerform(MenuCommand menuCommand)
+        private static void CreateRubyTextMeshProGuiObjectPerform(MenuCommand menuCommand)
         {
             GameObject go = RubyTMP_DefaultControls.CreateText(RubyTMPro_CreateObjectMenu.GetStandardResources());
 
             // Override text color and font size
             TMP_Text textComponent = go.GetComponent<TMP_Text>();
-            textComponent.color = Color.white;
-//            if (textComponent.m_isWaitingOnResourceLoad == false)
-            textComponent.fontSize = TMP_Settings.defaultFontSize;
+
+            Type type = typeof(TMP_Text);
+
+            FieldInfo isWaitingOnResourceLoadFieldInfo =
+                type.GetField("m_isWaitingOnResourceLoad", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
+            bool isWaitingOnResourceLoad = (bool)isWaitingOnResourceLoadFieldInfo.GetValue(textComponent);
+
+            if (isWaitingOnResourceLoad == false)
+            {
+                // Get reference to potential Presets for <TextMeshProUGUI> component
+                Preset[] presets = Preset.GetDefaultPresetsForObject(textComponent);
+
+                if (presets == null || presets.Length == 0)
+                {
+                    textComponent.fontSize = TMP_Settings.defaultFontSize;
+                    textComponent.color = Color.white;
+                    textComponent.text = "New Text";
+                }
+
+                if (TMP_Settings.autoSizeTextContainer)
+                {
+                    Vector2 size = textComponent.GetPreferredValues(TMP_Math.FLOAT_MAX, TMP_Math.FLOAT_MAX);
+                    textComponent.rectTransform.sizeDelta = size;
+                }
+                else
+                {
+                    textComponent.rectTransform.sizeDelta = TMP_Settings.defaultTextMeshProUITextContainerSize;
+                }
+            }
+            else
+            {
+                textComponent.fontSize = -99;
+                textComponent.color = Color.white;
+                textComponent.text = "New Text";
+            }
 
             RubyTMPro_CreateObjectMenu.PlaceUIElementRoot(go, menuCommand);
         }
@@ -84,13 +159,26 @@ namespace TMPro.EditorUtilities
         {
             if (RubyTMPro_CreateObjectMenu.standardResources.standard == null)
             {
-                RubyTMPro_CreateObjectMenu.standardResources.standard = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.STANDARD_SPRITE_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.background = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.BACKGROUND_SPRITE_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.inputField = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.INPUT_FIELD_BACKGROUND_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.knob = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.KNOB_PATH_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.checkmark = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.CHECKMARK_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.dropdown = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.DROPDOWN_ARROW_PATH);
-                RubyTMPro_CreateObjectMenu.standardResources.mask = AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.MASK_PATH);
+                RubyTMPro_CreateObjectMenu.standardResources.standard =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.STANDARD_SPRITE_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.background =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.BACKGROUND_SPRITE_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.inputField =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.INPUT_FIELD_BACKGROUND_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.knob =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.KNOB_PATH_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.checkmark =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.CHECKMARK_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.dropdown =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.DROPDOWN_ARROW_PATH);
+
+                RubyTMPro_CreateObjectMenu.standardResources.mask =
+                    AssetDatabase.GetBuiltinExtraResource<Sprite>(RubyTMPro_CreateObjectMenu.MASK_PATH);
             }
 
             return RubyTMPro_CreateObjectMenu.standardResources;
@@ -116,7 +204,8 @@ namespace TMPro.EditorUtilities
             Camera camera = sceneView.camera;
             Vector3 position = Vector3.zero;
 
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRTransform, new Vector2(camera.pixelWidth / 2f, camera.pixelHeight / 2f), camera, out Vector2 localPlanePosition))
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRTransform,
+                    new Vector2(camera.pixelWidth / 2f, camera.pixelHeight / 2f), camera, out Vector2 localPlanePosition))
             {
                 // Adjust for canvas pivot
                 localPlanePosition.x = localPlanePosition.x + canvasRTransform.sizeDelta.x * canvasRTransform.pivot.x;
@@ -133,11 +222,77 @@ namespace TMPro.EditorUtilities
 
                 Vector3 minLocalPosition;
                 minLocalPosition.x = sizeDelta.x * (0 - canvasRTransform.pivot.x) + itemTransform.sizeDelta.x * itemTransform.pivot.x;
-                minLocalPosition.y = canvasRTransform.sizeDelta.y * (0 - canvasRTransform.pivot.y) + itemTransform.sizeDelta.y * itemTransform.pivot.y;
+
+                minLocalPosition.y = canvasRTransform.sizeDelta.y * (0 - canvasRTransform.pivot.y) +
+                                     itemTransform.sizeDelta.y * itemTransform.pivot.y;
 
                 Vector3 maxLocalPosition;
-                maxLocalPosition.x = canvasRTransform.sizeDelta.x * (1 - canvasRTransform.pivot.x) - itemTransform.sizeDelta.x * itemTransform.pivot.x;
-                maxLocalPosition.y = canvasRTransform.sizeDelta.y * (1 - canvasRTransform.pivot.y) - itemTransform.sizeDelta.y * itemTransform.pivot.y;
+
+                maxLocalPosition.x = canvasRTransform.sizeDelta.x * (1 - canvasRTransform.pivot.x) -
+                                     itemTransform.sizeDelta.x * itemTransform.pivot.x;
+
+                maxLocalPosition.y = canvasRTransform.sizeDelta.y * (1 - canvasRTransform.pivot.y) -
+                                     itemTransform.sizeDelta.y * itemTransform.pivot.y;
+
+                position.x = Mathf.Clamp(position.x, minLocalPosition.x, maxLocalPosition.x);
+                position.y = Mathf.Clamp(position.y, minLocalPosition.y, maxLocalPosition.y);
+            }
+
+            itemTransform.anchoredPosition = position;
+            itemTransform.localRotation = Quaternion.identity;
+            itemTransform.localScale = Vector3.one;
+        }
+
+        private static void SetPositionVisibleinSceneView(RectTransform canvasRTransform, RectTransform itemTransform)
+        {
+            // Find the best scene view
+            SceneView sceneView = SceneView.lastActiveSceneView;
+
+            if (sceneView == null && SceneView.sceneViews.Count > 0)
+            {
+                sceneView = SceneView.sceneViews[0] as SceneView;
+            }
+
+            // Couldn't find a SceneView. Don't set position.
+            if (sceneView == null || sceneView.camera == null)
+            {
+                return;
+            }
+
+            // Create world space Plane from canvas position.
+            Camera camera = sceneView.camera;
+            Vector3 position = Vector3.zero;
+            Vector2 localPlanePosition;
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRTransform, new Vector2(camera.pixelWidth / 2, camera.pixelHeight / 2),
+                    camera, out localPlanePosition))
+            {
+                // Adjust for canvas pivot
+                localPlanePosition.x = localPlanePosition.x + canvasRTransform.sizeDelta.x * canvasRTransform.pivot.x;
+                localPlanePosition.y = localPlanePosition.y + canvasRTransform.sizeDelta.y * canvasRTransform.pivot.y;
+
+                localPlanePosition.x = Mathf.Clamp(localPlanePosition.x, 0, canvasRTransform.sizeDelta.x);
+                localPlanePosition.y = Mathf.Clamp(localPlanePosition.y, 0, canvasRTransform.sizeDelta.y);
+
+                // Adjust for anchoring
+                position.x = localPlanePosition.x - canvasRTransform.sizeDelta.x * itemTransform.anchorMin.x;
+                position.y = localPlanePosition.y - canvasRTransform.sizeDelta.y * itemTransform.anchorMin.y;
+
+                Vector3 minLocalPosition;
+
+                minLocalPosition.x = canvasRTransform.sizeDelta.x * (0 - canvasRTransform.pivot.x) +
+                                     itemTransform.sizeDelta.x * itemTransform.pivot.x;
+
+                minLocalPosition.y = canvasRTransform.sizeDelta.y * (0 - canvasRTransform.pivot.y) +
+                                     itemTransform.sizeDelta.y * itemTransform.pivot.y;
+
+                Vector3 maxLocalPosition;
+
+                maxLocalPosition.x = canvasRTransform.sizeDelta.x * (1 - canvasRTransform.pivot.x) -
+                                     itemTransform.sizeDelta.x * itemTransform.pivot.x;
+
+                maxLocalPosition.y = canvasRTransform.sizeDelta.y * (1 - canvasRTransform.pivot.y) -
+                                     itemTransform.sizeDelta.y * itemTransform.pivot.y;
 
                 position.x = Mathf.Clamp(position.x, minLocalPosition.x, maxLocalPosition.x);
                 position.y = Mathf.Clamp(position.y, minLocalPosition.y, maxLocalPosition.y);
@@ -168,41 +323,71 @@ namespace TMPro.EditorUtilities
                 }
             }
 
-            if (parent.GetComponentInParent<Canvas>() == null)
+            if (parent.GetComponentsInParent<Canvas>(true).Length == 0)
             {
                 // Create canvas under context GameObject,
                 // and make that be the parent which UI element is added under.
                 GameObject canvas = RubyTMPro_CreateObjectMenu.CreateNewUI();
-                canvas.transform.SetParent(parent.transform, false);
+                Undo.SetTransformParent(canvas.transform, parent.transform, "");
                 parent = canvas;
-            }
-
-            // Setting the element to be a child of an element already in the scene should
-            // be sufficient to also move the element to that scene.
-            // However, it seems the element needs to be already in its destination scene when the
-            // RegisterCreatedObjectUndo is performed; otherwise the scene it was created in is dirtied.
-            SceneManager.MoveGameObjectToScene(element, parent.scene);
-
-            if (element.transform.parent == null)
-            {
-                Undo.SetTransformParent(element.transform, parent.transform, "Parent " + element.name);
             }
 
             GameObjectUtility.EnsureUniqueNameForSibling(element);
 
-            // We have to fix up the undo name since the name of the object was only known after change parent it.
-            Undo.SetCurrentGroupName("Create " + element.name);
+            RubyTMPro_CreateObjectMenu.SetParentAndAlign(element, parent);
 
-            GameObjectUtility.SetParentAndAlign(element, parent);
-
-            if (!explicitParentChoice) // not a context click, so center in SceneView
+            if (!explicitParentChoice) // not a context click, so center in sceneview
             {
-                RubyTMPro_CreateObjectMenu.SetPositionVisibleInSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
+                RubyTMPro_CreateObjectMenu.SetPositionVisibleinSceneView(parent.GetComponent<RectTransform>(), element.GetComponent<RectTransform>());
             }
 
-            Undo.RegisterCreatedObjectUndo(element, "Create " + element.name);
+            // This call ensure any change made to created Objects after they where registered will be part of the Undo.
+            Undo.RegisterFullObjectHierarchyUndo(parent == null ? element : parent, "");
+
+            // We have to fix up the undo name since the name of the object was only known after reparenting it.
+            Undo.SetCurrentGroupName("Create " + element.name);
 
             Selection.activeGameObject = element;
+        }
+
+        private static void SetParentAndAlign(GameObject child, GameObject parent)
+        {
+            if (parent == null)
+            {
+                return;
+            }
+
+            Undo.SetTransformParent(child.transform, parent.transform, "");
+
+            RectTransform rectTransform = child.transform as RectTransform;
+
+            if (rectTransform)
+            {
+                rectTransform.anchoredPosition = Vector2.zero;
+                Vector3 localPosition = rectTransform.localPosition;
+                localPosition.z = 0;
+                rectTransform.localPosition = localPosition;
+            }
+            else
+            {
+                child.transform.localPosition = Vector3.zero;
+            }
+
+            child.transform.localRotation = Quaternion.identity;
+            child.transform.localScale = Vector3.one;
+
+            RubyTMPro_CreateObjectMenu.SetLayerRecursively(child, parent.layer);
+        }
+
+        private static void SetLayerRecursively(GameObject go, int layer)
+        {
+            go.layer = layer;
+            Transform t = go.transform;
+
+            for (int i = 0; i < t.childCount; i++)
+            {
+                RubyTMPro_CreateObjectMenu.SetLayerRecursively(t.GetChild(i).gameObject, layer);
+            }
         }
 
         private static GameObject CreateNewUI()
@@ -267,13 +452,8 @@ namespace TMPro.EditorUtilities
         {
             GameObject selectedGo = Selection.activeGameObject;
 
-            // Try to find a gameObject that is the selected GO or one if its parents.
+            // Try to find a gameobject that is the selected GO or one if its parents.
             Canvas canvas = selectedGo != null ? selectedGo.GetComponentInParent<Canvas>() : null;
-
-            if (canvas == null)
-            {
-                return null;
-            }
 
             if (RubyTMPro_CreateObjectMenu.IsValidCanvas(canvas))
             {
@@ -284,11 +464,11 @@ namespace TMPro.EditorUtilities
             // We have to find all loaded Canvases, not just the ones in main scenes.
             Canvas[] canvasArray = StageUtility.GetCurrentStageHandle().FindComponentsOfType<Canvas>();
 
-            foreach (Canvas t in canvasArray)
+            for (int i = 0; i < canvasArray.Length; i++)
             {
-                if (RubyTMPro_CreateObjectMenu.IsValidCanvas(t))
+                if (RubyTMPro_CreateObjectMenu.IsValidCanvas(canvasArray[i]))
                 {
-                    return t.gameObject;
+                    return canvasArray[i].gameObject;
                 }
             }
 

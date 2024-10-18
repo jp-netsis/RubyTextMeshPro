@@ -1,14 +1,15 @@
 {
   "name": "jp.netsis.rubytmp",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "displayName": "Ruby Text Mesh Pro",
-  "description": "Extension to add ruby tags to TextMeshPro.",
-  "unity": "2021.3",
+  "description": "Extension to add furigana(ruby) tags to TextMeshPro.",
+  "unity": "6000.0",
   "documentationUrl": "https://github.com/jp-netsis/RubyTextMeshPro",
   "changelogUrl": "https://github.com/jp-netsis/RubyTextMeshPro/releases",
   "licensesUrl": "https://github.com/jp-netsis/RubyTextMeshPro/blob/main/LICENSE",
   "dependencies": {
-    "com.unity.textmeshpro": "3.0.6"
+    "com.unity.ugui": "2.0.0",
+    "jp.netsis.rubytext.abstractions": "0.1.0"
  },
  "samples": [
    {
@@ -24,7 +25,7 @@
   ],
   "author": {
     "name": "netsis.jp",
-    "email": "info@netsis.jp",
-    "url": "https://netsis.jp/"
+    "email": "netsis.jenomoto@gmail.com",
+    "url": "https://github.com/jp-netsis/RubyTextMeshPro"
   }
 }
