@@ -1,36 +1,39 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using jp.netsis.RubyText;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace TMPro
 {
-    using static RubyTextMeshProDefinitions;
+    using static RubyTextConstants;
 
     public class RubyTextMeshPro : TextMeshPro, IRubyText
     {
         [Tooltip("v offset ruby. (em, px, %).")]
         [SerializeField]
-        [FormerlySerializedAs("rubyVerticalOffset")] 
+        [FormerlySerializedAs("rubyVerticalOffset")]
         private string _rubyVerticalOffset = "1em";
+
         public string rubyVerticalOffset => this._rubyVerticalOffset;
 
         [Tooltip("ruby scale. (1=100%)")]
         [SerializeField]
-        [FormerlySerializedAs("rubyScale")] 
+        [FormerlySerializedAs("rubyScale")]
         private float _rubyScale = 0.5f;
+
         public float rubyScale => this._rubyScale;
 
         [Tooltip("The height of the ruby line can be specified. (em, px, %).")]
         [SerializeField]
-        [FormerlySerializedAs("rubyLineHeight")] 
+        [FormerlySerializedAs("rubyLineHeight")]
         private string _rubyLineHeight = "";
+
         public string rubyLineHeight => this._rubyLineHeight;
 
         [TextArea(5, 10)]
         [SerializeField]
         [FormerlySerializedAs("m_uneditedText")]
         private string _uneditedText;
+
         public string uneditedText
         {
             get => this._uneditedText;
@@ -41,15 +44,17 @@ namespace TMPro
             }
         }
 
-        [Tooltip("ruby show type.")] 
+        [Tooltip("ruby show type.")]
         [SerializeField]
         [FormerlySerializedAs("rubyShowType")]
         private RubyShowType _rubyShowType = RubyShowType.RUBY_ALIGNMENT;
+
         public RubyShowType rubyShowType => this._rubyShowType;
 
-        [Tooltip("Affects only BASE_NO_OVERRAP_RUBY_ALIGNMENT ruby margin.")] 
+        [Tooltip("Affects only BASE_NO_OVERRAP_RUBY_ALIGNMENT ruby margin.")]
         [SerializeField]
         private float _rubyMargin = 10;
+
         public float rubyMargin => this._rubyMargin;
 
 #if UNITY_EDITOR

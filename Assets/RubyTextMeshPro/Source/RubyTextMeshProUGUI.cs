@@ -1,36 +1,37 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using jp.netsis.RubyText;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace TMPro
 {
-    using static RubyTextMeshProDefinitions;
-
     public class RubyTextMeshProUGUI : TextMeshProUGUI, IRubyText
     {
         [Tooltip("v offset ruby. (em, px, %).")]
         [SerializeField]
-        [FormerlySerializedAs("rubyVerticalOffset")] 
+        [FormerlySerializedAs("rubyVerticalOffset")]
         private string _rubyVerticalOffset = "1em";
+
         public string rubyVerticalOffset => this._rubyVerticalOffset;
 
         [Tooltip("ruby scale. (1=100%)")]
         [SerializeField]
-        [FormerlySerializedAs("rubyScale")] 
+        [FormerlySerializedAs("rubyScale")]
         private float _rubyScale = 0.5f;
+
         public float rubyScale => this._rubyScale;
 
         [Tooltip("The height of the ruby line can be specified. (em, px, %).")]
         [SerializeField]
-        [FormerlySerializedAs("rubyLineHeight")] 
+        [FormerlySerializedAs("rubyLineHeight")]
         private string _rubyLineHeight = "";
+
         public string rubyLineHeight => this._rubyLineHeight;
 
         [TextArea(5, 10)]
         [SerializeField]
         [FormerlySerializedAs("m_uneditedText")]
         private string _uneditedText;
+
         public string uneditedText
         {
             get => this._uneditedText;
@@ -41,15 +42,17 @@ namespace TMPro
             }
         }
 
-        [Tooltip("ruby show type.")] 
+        [Tooltip("ruby show type.")]
         [SerializeField]
         [FormerlySerializedAs("rubyShowType")]
-        private RubyShowType _rubyShowType = RubyShowType.RUBY_ALIGNMENT;
-        public RubyShowType rubyShowType => this._rubyShowType;
+        private RubyTextConstants.RubyShowType _rubyShowType = RubyTextConstants.RubyShowType.RUBY_ALIGNMENT;
 
-        [Tooltip("ruby margin.")] 
+        public RubyTextConstants.RubyShowType rubyShowType => this._rubyShowType;
+
+        [Tooltip("ruby margin.")]
         [SerializeField]
         private float _rubyMargin = 10;
+
         public float rubyMargin => this._rubyMargin;
 
 #if UNITY_EDITOR
@@ -112,7 +115,7 @@ namespace TMPro
             int dir = this.isRightToLeftText ? -1 : 1;
             // Q. Why (m_isOrthographic ? 1 : 10f) => A. TMP_Text.cs L7622, L7625 
             float hiddenSpaceW = -dir * nonBreakSpaceW * (this.m_isOrthographic ? 1 : 10f) * this.rubyScale * fontSizeScale;
-            str = this.ReplaceRubyTags(str,dir,fontSizeScale,hiddenSpaceW);
+            str = this.ReplaceRubyTags(str, dir, fontSizeScale, hiddenSpaceW);
 
             return str;
         }
