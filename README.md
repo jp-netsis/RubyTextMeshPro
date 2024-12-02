@@ -57,11 +57,42 @@ Obsolete : `RubyTextMeshPro.UnditedText` / `RubyTextMeshProUGUI.UnditedText` : W
 
 ## Realtime Ruby Text
 
-You can use `<ruby=ice>fire</ruby>` tag or `<r=ice>fire</r>` tag.  Both are the same.
+Ruby tags allow you to annotate text with small "ruby" characters (e.g., for pronunciation or additional information). Various styles of ruby tags are supported, providing flexibility and backward compatibility.
 
-It can also work with double quotes.
+### Supported Ruby Tag Formats
 
-`<ruby="ice">fire</ruby>` tag or `<r="ice">fire</r>` tag.
+1. **Legacy Ruby Tag Styles**:
+   These styles have been supported since earlier versions and are fully compatible.
+   - `<ruby=ice>fire</ruby>`: Annotates "fire" with "ice".
+   - `<r=ice>fire</r>`: Equivalent to the above.
+   - These tags also support double quotes:
+     - `<ruby="ice">fire</ruby>`
+     - `<r="ice">fire</r>`
+
+2. **Standard Ruby Tag Styles (from v1.3.0)**:
+   Starting from **v1.3.0**, the standard ruby tag format is supported. This enables additional features, such as the ability to use rich text formatting within ruby annotations.
+   - `<ruby>fire<rt>ice</rt></ruby>`: Annotates "fire" with "ice".
+   - `<r>fire<rt>ice</rt></r>`: Equivalent to the standard style.
+   - `<r>fire<rt><color="blue">ice</color></rt></r>`: Enables rich text formatting (e.g., coloring "ice" in blue).
+
+---
+
+### Examples
+
+| Input Syntax                                      | Rendered Output                           |
+|--------------------------------------------------|-------------------------------------------|
+| `<ruby=ice>fire</ruby>`                          | <ruby>fire<rt>ice</rt></ruby>             |
+| `<r=ice>fire</r>`                                | <ruby>fire<rt>ice</rt></ruby>             |
+| `<ruby="ice">fire</ruby>`                        | <ruby>fire<rt>ice</rt></ruby>             |
+| `<ruby>fire<rt>ice</rt></ruby>`                  | <ruby>fire<rt>ice</rt></ruby>             |
+| `<r>fire<rt>ice</rt></r>`                        | <ruby>fire<rt>ice</rt></ruby>             |
+
+---
+
+> [!TIP]
+> - **Rich Text Support**: The standard ruby tag style (`<ruby><rt>`) allows for advanced formatting such as color, bold, or italic within the ruby annotations.
+> - **Backward Compatibility**: Legacy styles such as `<ruby="ice">` and `<r="ice">` are fully supported alongside the new standard ruby tag style.
+> - **Standard Syntax Recommendation**: It is recommended to use the standard ruby tag style (`<ruby><rt>`) for new projects to take full advantage of the rich text features.
 
 # How To Use
 
