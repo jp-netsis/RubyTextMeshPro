@@ -1,6 +1,6 @@
 {
   "name": "jp.netsis.rubytmp",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "displayName": "Ruby Text Mesh Pro",
   "description": "Extension to add furigana(ruby) tags to TextMeshPro.",
   "unity": "6000.0",
@@ -9,7 +9,7 @@
   "licensesUrl": "https://github.com/jp-netsis/RubyTextMeshPro/blob/main/LICENSE",
   "dependencies": {
     "com.unity.ugui": "2.0.0",
-    "jp.netsis.rubytext.abstractions": "0.1.0"
+    "jp.netsis.rubytext.abstractions": "0.2.0"
  },
  "samples": [
    {
