@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -15,9 +14,10 @@ namespace TMPro
         }
 
         // ruby tag
-        public static readonly Regex RUBY_REGEX = new Regex(@"<r(uby)?=""?(?<ruby>[\s\S]*?)""?>(?<val>[\s\S]*?)<\/r(uby)?>");
+        public static readonly Regex RUBY_REGEX = new(@"<r(uby)?=""?(?<ruby>[\s\S]*?)""?>(?<val>[\s\S]*?)<\/r(uby)?>|<ruby>(?<base>[\s\S]*?)<rt>(?<rubyText>[\s\S]*?)<\/rt><\/ruby>|<r>(?<base>[\s\S]*?)<rt>(?<rubyText>[\s\S]*?)<\/rt><\/r>");
+
         private static Lazy<StringBuilder> stringBuilder = new Lazy<StringBuilder>();
-        
+
         public static string ReplaceRubyTags(this IRubyText targetRubyText, string str, int dir, float fontSizeScale, float hiddenSpaceW)
         {
             // Replace <ruby> tags text layout.
@@ -35,7 +35,20 @@ namespace TMPro
             {
                 foreach (Match match in matches)
                 {
-                    if (match.Groups.Count != 5)
+                    string baseText;
+                    string rubyText;
+
+                    if (match.Groups["base"].Success && match.Groups["rubyText"].Success)
+                    {
+                        baseText = match.Groups["base"].Value;
+                        rubyText = match.Groups["rubyText"].Value;
+                    }
+                    else if (match.Groups["val"].Success && match.Groups["ruby"].Success)
+                    {
+                        baseText = match.Groups["val"].Value;
+                        rubyText = match.Groups["ruby"].Value;
+                    }
+                    else
                     {
                         continue;
                     }
@@ -47,10 +60,6 @@ namespace TMPro
                         currentTextW += unmatchTextW;
                         stringBuilder.Append(unmatchPart);
                     }
-
-                    string fullMatch = match.Groups[0].ToString();
-                    string rubyText = match.Groups["ruby"].ToString();
-                    string baseText = match.Groups["val"].ToString();
 
                     float rubyTextW = targetRubyText.GetPreferredValues(rubyText).x * (targetRubyText.isOrthographic ? 1 : 10f) *
                                       targetRubyText.rubyScale;
@@ -72,27 +81,27 @@ namespace TMPro
 
                     stringBuilder.Append(replace);
                 }
-                
+
                 Match lastMatch = matches[matches.Count - 1];
                 stringBuilder.Append(str.Substring(lastMatch.Index + lastMatch.Length));
             }
 
             if (!string.IsNullOrWhiteSpace(targetRubyText.rubyLineHeight))
+            {
                 // warning! bad Know-how
                 // line-height tag is down the next line start.
                 // now line can't change, corresponding by putting a hidden ruby
-            {
-                stringBuilder.Insert(0,$"<line-height={targetRubyText.rubyLineHeight}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>");
+                stringBuilder.Insert(0, $"<line-height={targetRubyText.rubyLineHeight}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>\u00A0</size></voffset><space={hiddenSpaceW}>");
             }
-            
+
             return stringBuilder.ToString();
         }
 
         private static string CreateReplaceValue(
-            this IRubyText targetRubyText, 
+            this IRubyText targetRubyText,
             int dir,
-            string baseText, float baseTextW, 
-            string rubyText, float rubyTextW, 
+            string baseText, float baseTextW,
+            string rubyText, float rubyTextW,
             ref float currentTextW, ref float rubyCurrentTextW)
         {
             float baseTextDirW = dir * baseTextW;
@@ -127,21 +136,23 @@ namespace TMPro
                     {
                         if (compensationOffset < 0)
                         {
-                            replace = targetRubyText.CreateRubyAfterBaseText(baseText,  rubyText, rubyTextOffset, compensationOffset);
+                            replace = targetRubyText.CreateRubyAfterBaseText(baseText, rubyText, rubyTextOffset, compensationOffset);
                             currentTextW += rubyTextDirW;
                         }
                         else
                         {
-                            replace = targetRubyText.CreateBaseAfterRubyText(baseText,  rubyText, rubyTextOffset, compensationOffset);
+                            replace = targetRubyText.CreateBaseAfterRubyText(baseText, rubyText, rubyTextOffset, compensationOffset);
                             currentTextW += baseTextDirW;
                         }
                     }
                     break;
+
                 case RubyShowType.BASE_NO_OVERRAP_RUBY_ALIGNMENT:
                     stringBuilder.Value.Clear();
                     float rubyCurrentTextOffsetW = currentTextW + (baseTextDirW + rubyTextOffset) - rubyCurrentTextW;
 
-                    if (0f > rubyCurrentTextOffsetW) {
+                    if (0f > rubyCurrentTextOffsetW)
+                    {
                         stringBuilder.Value.Append($"<space={-rubyCurrentTextOffsetW}>");
                         rubyCurrentTextW = rubyCurrentTextW + rubyTextDirW + targetRubyText.rubyMargin;
                         currentTextW += -rubyCurrentTextOffsetW;
@@ -166,17 +177,13 @@ namespace TMPro
         public static string CreateBaseAfterRubyText(
             this IRubyText targetRubyText, string baseText, string rubyText, float rubyTextOffset, float compensationOffset)
         {
-            return
-                $"<nobr>{baseText}<space={rubyTextOffset}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+            return $"<nobr>{baseText}<space={rubyTextOffset}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
         }
 
         public static string CreateRubyAfterBaseText(
             this IRubyText targetRubyText, string baseText, string rubyText, float rubyTextOffset, float compensationOffset)
         {
-            return
-                $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
+            return $"<nobr><space={-compensationOffset}>{baseText}<space={rubyTextOffset}><voffset={targetRubyText.rubyVerticalOffset}><size={targetRubyText.rubyScale * 100f}%>{rubyText}</size></voffset><space={compensationOffset}></nobr>";
         }
-
-
     }
 }
