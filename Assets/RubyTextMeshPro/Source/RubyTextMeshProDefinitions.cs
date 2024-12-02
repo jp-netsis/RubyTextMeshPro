@@ -14,9 +14,7 @@ namespace TMPro
         }
 
         // ruby tag
-        public static readonly Regex RUBY_REGEX = new Regex(
-            @"<r(uby)?=""?(?<ruby>[\s\S]*?)""?>(?<val>[\s\S]*?)<\/r(uby)?>|<ruby>(?<base>[\s\S]*?)<rt>(?<rubyText>[\s\S]*?)<\/rt><\/ruby>"
-        );
+        public static readonly Regex RUBY_REGEX = new(@"<r(uby)?=""?(?<ruby>[\s\S]*?)""?>(?<val>[\s\S]*?)<\/r(uby)?>|<ruby>(?<base>[\s\S]*?)<rt>(?<rubyText>[\s\S]*?)<\/rt><\/ruby>|<r>(?<base>[\s\S]*?)<rt>(?<rubyText>[\s\S]*?)<\/rt><\/r>");
 
         private static Lazy<StringBuilder> stringBuilder = new Lazy<StringBuilder>();
 
