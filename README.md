@@ -25,6 +25,10 @@ It is possible to install `v1.3.0` in Unity6, but it is not recommended because 
 
 # Disruptive change
 
+## ver 2.1
+
+Added : Standard Ruby Tag Styles <rt> tag
+
 ## ver 2.0
 
 Unity version up to 6000.0.23f1(LTS)
@@ -34,6 +38,10 @@ Updated : package.json
 Updated : Readme.md
 
 Added : Readme.ja.md
+
+## ver 1.3
+
+Added : Standard Ruby Tag Styles <rt> tag
 
 ## ver 1.2
 
@@ -100,15 +108,13 @@ Ruby tags allow you to annotate text with small "ruby" characters (e.g., for pro
 
 There is a way to install from GitHub.
 
-In this case, the dependency information for TextMeshPro 3.0.6 is retained, so if TextMeshPro is not installed, it will be installed.
-
 [Install]
 
 Unity > Window > PackageManager > + > Add package from git url... > Add the following
 
 + `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.2.0`
 
-+ `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.0.0`
++ `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.1.0`
 
 ## 2. Copy Source Only
 
@@ -128,6 +134,9 @@ or
 
 `<r=xyz>XYZ</r>`
 
+or
+
+`<r>XYZ<rt>xyz</rt></r>`
 
 ## RubyShowType
 

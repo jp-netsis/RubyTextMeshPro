@@ -88,11 +88,11 @@
       }
     },
     "jp.netsis.rubytext.abstractions": {
-      "version": "https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData",
+      "version": "https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.2.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "07fe451b09d8e4a11207b5266b0e5ca9c67fe519"
+      "hash": "95e0be193dde321a545d5327b71957980c993aa6"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

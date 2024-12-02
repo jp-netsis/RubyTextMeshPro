@@ -25,6 +25,10 @@ Unity6でも`v1.3.0`をインストールすることは可能ですが、packag
 
 # Disruptive change
 
+## ver 2.1
+
+追加 : スタンダードルビタグスタイル <rt> タグ
+
 ## ver 2.0
 
 Unity バージョンアップ 6000.0.23f1(LTS)
@@ -34,6 +38,10 @@ Unity バージョンアップ 6000.0.23f1(LTS)
 更新 : Readme.md
 
 追加 : Readme.ja.md
+
+## ver 1.3
+
+追加 : スタンダードルビタグスタイル <rt> タグ
 
 ## ver 1.2
 
@@ -99,15 +107,13 @@ Unity バージョンアップ 6000.0.23f1(LTS)
 
 GitHubからインストールをすることが可能です。
 
-この場合、TextMeshPro3.0.6の依存情報を残しているため、TextMeshProをインストールしていない場合、インストールされます。
-
 [Install]
 
 Unity > Window > PackageManager > + > Add package from git url... > Add the following
 
 + `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.2.0`
 
-+ `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.0.0`
++ `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.1.0`
 
 ## 2. Copy Source Only
 
@@ -127,6 +133,9 @@ Unity > Window > PackageManager > + > Add package from git url... > Add the foll
 
 `<r=かんじ>漢字</r>`
 
+もしくは
+
+`<r>漢字<rt>かんじ</rt></r>`
 
 ## RubyShowType
 
