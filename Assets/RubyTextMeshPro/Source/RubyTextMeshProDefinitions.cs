@@ -40,19 +40,16 @@ namespace TMPro
 
                     if (match.Groups["base"].Success && match.Groups["rubyText"].Success)
                     {
-                        // 새로운 <ruby>base<rt>value</rt></ruby> 형식
                         baseText = match.Groups["base"].Value;
                         rubyText = match.Groups["rubyText"].Value;
                     }
                     else if (match.Groups["val"].Success && match.Groups["ruby"].Success)
                     {
-                        // 기존 <ruby="value">base</ruby> 형식
                         baseText = match.Groups["val"].Value;
                         rubyText = match.Groups["ruby"].Value;
                     }
                     else
                     {
-                        // 매칭 실패
                         continue;
                     }
 
