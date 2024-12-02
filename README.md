@@ -19,9 +19,9 @@ UnityVer:6000.0.23f1(LTS)
 UGUI:2.0.0
 ```
 
-Versions prior to Unity6 should use the `v1.2.0` tag.
+Versions prior to Unity6 should use the `v1.3.0` tag.
 
-It is possible to install `v1.2.0` in Unity6, but it is not recommended because package.json contains dependency information on the old `TextMeshPro v3.0.6`.
+It is possible to install `v1.3.0` in Unity6, but it is not recommended because package.json contains dependency information on the old `TextMeshPro v3.0.6`.
 
 # Disruptive change
 
@@ -106,7 +106,7 @@ In this case, the dependency information for TextMeshPro 3.0.6 is retained, so i
 
 Unity > Window > PackageManager > + > Add package from git url... > Add the following
 
-+ `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.1.0`
++ `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.2.0`
 
 + `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.0.0`
 
