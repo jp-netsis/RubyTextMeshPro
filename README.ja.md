@@ -19,9 +19,9 @@ UnityVer:6000.0.23f1(LTS)
 UGUI:2.0.0
 ```
 
-Unity6以前のバージョンでは、`v1.2.0`タグを使用してください。
+Unity6以前のバージョンでは、`v1.3.0`タグを使用してください。
 
-Unity6でも`v1.2.0`をインストールすることは可能ですが、package.json に旧`TextMeshPro v3.0.6`への依存情報が含まれているためおすすめしません。
+Unity6でも`v1.3.0`をインストールすることは可能ですが、package.json に旧`TextMeshPro v3.0.6`への依存情報が含まれているためおすすめしません。
 
 # Disruptive change
 
@@ -57,11 +57,41 @@ Unity バージョンアップ 6000.0.23f1(LTS)
 
 ## Realtime Ruby Text
 
-あなたは`<ruby=にほんご>日本語</ruby>`タグもしくは省略した`<r=にほんご>日本語</r>`タグを使用できます。
+振り仮名を追加するには、以下のようなタグ形式を使用します。
 
-また、半角ダブルクォーテーションで囲っても動作します。
+### サポートされるタグ形式
 
-`<ruby="にほんご">日本語</ruby>`タグも`<r="にほんご">日本語</r>`タグもOKです。
+1. **レガシールビタグ形式**:
+   - `<ruby=にほんご>日本語</ruby>`: 「日本語」に「にほんご」を注釈。
+   - `<r=にほんご>日本語</r>`: 上記と同じ。
+   - また、以下のようにダブルクォートも使用可能です:
+     - `<ruby="にほんご">日本語</ruby>`
+     - `<r="にほんご">日本語</r>`
+
+2. **標準ルビタグ形式 (v1.3.0以降)**:
+   - v1.3.0 以降では、標準的なルビタグ形式がサポートされています。
+   - `<ruby>日本語<rt>にほんご</rt></ruby>`: 「日本語」に「にほんご」を注釈。
+   - `<r>日本語<rt>にほんご</rt></r>`: 同じ形式。
+   - `<r>日本語<rt><color="blue">にほんご</color></rt></r>`: 注釈内にリッチテキスト (例: 青色文字) を使用可能。
+
+---
+
+### 例
+
+| 入力形式                                        | 表示結果                                       |
+|-------------------------------------------------|-----------------------------------------------|
+| `<ruby=にほんご>日本語</ruby>`                  | <ruby>日本語<rt>にほんご</rt></ruby>          |
+| `<r=にほんご>日本語</r>`                        | <ruby>日本語<rt>にほんご</rt></ruby>          |
+| `<ruby="にほんご">日本語</ruby>`                | <ruby>日本語<rt>にほんご</rt></ruby>          |
+| `<ruby>日本語<rt>にほんご</rt></ruby>`          | <ruby>日本語<rt>にほんご</rt></ruby>          |
+| `<r>日本語<rt><color="blue">にほんご</color></rt></r>` | <ruby>日本語<rt><color="blue">にほんご</color></rt></ruby> |
+
+---
+
+> [!TIP]
+> - **リッチテキストサポート**: 標準ルビタグ形式 (`<ruby><rt>`) を使用すると、色や太字などのリッチテキストを注釈内に適用可能です。
+> - **互換性**: レガシー形式 (`<ruby="value">`) と標準形式が同時にサポートされています。
+> - **推奨**: 新しいプロジェクトでは、標準タグ形式 (`<ruby><rt>`) を使用することを推奨します。
 
 # How To Use
 
@@ -75,7 +105,7 @@ GitHubからインストールをすることが可能です。
 
 Unity > Window > PackageManager > + > Add package from git url... > Add the following
 
-+ `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.1.0`
++ `https://github.com/jp-netsis/RubyTextAbstractions.git?path=/RubyTextAbstractions/PackageData#v0.2.0`
 
 + `https://github.com/jp-netsis/RubyTextMeshPro.git?path=/Assets/RubyTextMeshPro#v2.0.0`
 
