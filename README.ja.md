@@ -23,7 +23,12 @@ Unity6以前のバージョンでは、`v1.3.0`タグを使用してください
 
 Unity6でも`v1.3.0`をインストールすることは可能ですが、package.json に旧`TextMeshPro v3.0.6`への依存情報が含まれているためおすすめしません。
 
-# Disruptive change
+# Changes
+
+## ver 2.2
+
+RubyTextAbstractions バージョンの更新
+SetUneditedText 関数の追加
 
 ## ver 2.1
 
