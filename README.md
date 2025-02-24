@@ -23,7 +23,12 @@ Versions prior to Unity6 should use the `v1.3.0` tag.
 
 It is possible to install `v1.3.0` in Unity6, but it is not recommended because package.json contains dependency information on the old `TextMeshPro v3.0.6`.
 
-# Disruptive change
+# Changes
+
+## ver 2.2
+
+Updated RubyTextAbstractions version.
+Added SetUneditedText functions.
 
 ## ver 2.1
 

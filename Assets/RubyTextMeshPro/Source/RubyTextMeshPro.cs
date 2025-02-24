@@ -67,6 +67,15 @@ namespace TMPro
         }
 #endif
 
+        /// <summary>
+        /// Setting unedited text
+        /// </summary>
+        /// <param name="text">Set text</param>
+        public void SetUneditedText(string text)
+        {
+            this.uneditedText = text;
+        }
+
         private void SetTextCustom(string value)
         {
             this.text = this.ReplaceRubyTags(value);

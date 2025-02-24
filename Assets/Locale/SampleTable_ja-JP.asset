@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: SampleTable_ja-JP
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: ja-JP
+  m_SharedData: {fileID: 11400000, guid: 6046e2717f45d458d98ff0dbeccd710e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 8689541120
+    m_Localized: "<ruby=\u308A\u3085\u3046>\u9F8D</ruby><ruby=\u306B\u307B\u3093\u3054>\u65E5\u672C\u8A9E</ruby>\u306F<ruby=\u3080\u305A\u304B>\u96E3</ruby>\u3057\u3044<ruby=\u306B\u307B\u3093\u3054>\u65E5\u672C\u8A9E</ruby>\u306E<ruby=\u306B\u307B\u3093\u3054>\u65E5\u672C\u8A9E</ruby>\u306B\u3088\u308B<ruby=\u306B\u307B\u3093\u3054>\u65E5\u672C\u8A9E</ruby>\u306E\u305F\u3081\u306E<ruby=\u306B\u307B\u3093\u3054>\u65E5\u672C\u8A9E</ruby>\u3067\u3059\u30EB\u30D3\u30C6\u30B9\u30C8(BASE_ALIGN)"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
